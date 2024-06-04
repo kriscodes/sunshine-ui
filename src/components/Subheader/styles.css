@@ -1,0 +1,17 @@
+.submenu-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between items */
+    background-color: var(--primary-color); /* Light background color */
+    padding: 10px 0; /* Padding for some vertical space */
+  }
+  
+  .submenu-item {
+    text-decoration: none; /* Remove underline */
+    color: black; /* Link color */
+    transition: color 0.3s ease; /* Smooth color transition */
+  }
+  
+  .submenu-item:hover {
+    color: #0056b3; /* Darker color on hover */
+  }
