@@ -5,6 +5,8 @@ import ImageSlider from '../../components/ImageSlider';
 import Submenu from '../../components/Subheader';
 import MissionStatement from '../../components/MissionStatement';
 import { TextTestimonial, VideoTestimonial } from '../../components/Testimonials';
+import ContactUs from '../../components/ContactUs';
+import Footer from '../../components/Footer';
 
 function Home() {
   return (
@@ -16,7 +18,10 @@ function Home() {
             <MissionStatement/>
             <TextTestimonial/>
             <VideoTestimonial/>
+            <ContactUs/>
+            <Footer/>
         </div>
+        
     </div>
   );
 }

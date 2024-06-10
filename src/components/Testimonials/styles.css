@@ -1,7 +1,7 @@
 .line-t {
     position: absolute;
-    bottom: 25%;
-    width: 50%;
+    bottom: 44%;
+    width: 60%;
     height: 1px;
     background-color: rgb(34, 61, 68);
     transform: rotate(-26deg); /* Adjust rotation angle as needed */
