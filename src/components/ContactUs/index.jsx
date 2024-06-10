@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './styles.css'
 import axios from 'axios';
 
 const ContactUs = () => {
@@ -30,66 +31,95 @@ const ContactUs = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
-      <div style={{ flex: 1, marginRight: '20px' }}>
+    <div className='contact-container'>
+      <div className='contact-form-container'>
         <h1>Contact Us</h1>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>First Name:</label>
+          <div className='contact-item-container'>
+            
             <input
+              className='contact-input'
               type="text"
               name="firstName"
+              placeholder='First Name'
               value={formData.firstName}
               onChange={handleChange}
               required
             />
           </div>
-          <div>
-            <label>Last Name:</label>
+          <div className='contact-item-container'>
             <input
+              className='contact-input'
               type="text"
               name="lastName"
+              placeholder='Last Name'
               value={formData.lastName}
               onChange={handleChange}
               required
             />
           </div>
-          <div>
-            <label>Phone Number:</label>
+          <div className='contact-item-container'>
             <input
+              className='contact-input'
               type="tel"
               name="phone"
+              placeholder='Phone Number'
               value={formData.phone}
               onChange={handleChange}
               required
             />
           </div>
-          <div>
-            <label>Email:</label>
+          <div className='contact-item-container'>
             <input
+              className='contact-input'
               type="email"
               name="email"
+              placeholder='Email'
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
-          <div>
-            <label>Reason for Call:</label>
-            <select name="reason" value={formData.reason} onChange={handleChange} required>
-              <option value="">Select a reason</option>
+          <div className='contact-item-container'>
+            <select 
+            name="reason" 
+            className='contact-input'
+            value={formData.reason} 
+            onChange={handleChange} 
+            required
+            >
+              <option value="">Reason for Call</option>
               <option value="support">Support</option>
               <option value="sales">Sales</option>
               <option value="general">General Inquiry</option>
             </select>
           </div>
-          <button type="submit">Submit</button>
+          <div className='contact-item-container'>
+            <button 
+            className='contact-button'
+            type="submit">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
-      <div style={{ flex: 1 }}>
-        <h2>Our Addresses</h2>
-        <p>123 Main St, Cityville, ST 12345</p>
-        <p>456 Side St, Townsville, ST 67890</p>
+      <div className='contact-form-container'>
+        <span className="footer-title">
+          Sunshine Preschool - Lynwood
+        </span>
+        <span className="footer-address">
+            12070 Santa Fe Ave, <br/>
+            Lynwood, CA 90262 <br/>
+            (310) 762-2558
+        </span>
+        <span className="footer-title">
+            Sunshine Preschool - Compton
+        </span>
+        <span className="footer-address">
+            2038 E Compton Blvd, <br/>
+            Compton, CA 90221 <br/>
+            (424) 338-3053
+        </span>
       </div>
     </div>
   );

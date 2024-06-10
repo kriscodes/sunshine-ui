@@ -3,7 +3,6 @@ import './styles.css'
 
 const MissionStatement = () => {
 
-
     return (
         <div className='main-container'>
             <p>
@@ -28,13 +27,12 @@ const MissionStatement = () => {
                         </p>
                     </div>
                     <div>
-                        <img src="/kids.jpg" alt="alt" width='350px' style={{textAlign: 'center'}} />
+                        <img className='mission-image' src="/kids.jpg" alt="alt"  />
                     </div>
-                    <div class="line"></div>
                 </div>
                 <div className='main-flex-container'>
                     <div>
-                        <img src="kids.jpg" alt="alt" width='350px' style={{textAlign: 'center'}} />
+                        <img src="kids.jpg" alt="alt" className='mission-image' />
                     </div>
                     <div className='text-container'>
                         <p>

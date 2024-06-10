@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css';
 
 export const TextTestimonial = () => {
-
+    
     return (
         <div style={{display: "flex", flexDirection: "column"}}>
             <div>
@@ -18,7 +18,6 @@ export const TextTestimonial = () => {
                     <span>
                         - This is a persons name
                     </span>
-                    <div class="line-t"></div>
                 </div>
                 <div className="test-container-b">
                     <p>
@@ -36,12 +35,18 @@ export const TextTestimonial = () => {
 }
 
 export const VideoTestimonial = () => {
+    const [width, setWidth] = useState(window.innerWidth);
+    let iframeWidth = "560"
+    useEffect(() => {
+        if(width < 700) {
+            iframeWidth = "255";
+        }
+    }, [width])
 
     return (
-        <div style={{ padding: "60px 0" }}>
+        <div className="testimonial-video-container">
             <iframe 
-                width="560" 
-                height="315" 
+                id='testimonial-video'
                 src="https://www.youtube.com/embed/-oynJiQ8ZJ8?si=Ih6OUeolusNRgF1L" 
                 title="YouTube video player" 
                 frameborder="0" 

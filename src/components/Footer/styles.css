@@ -17,9 +17,7 @@
     padding-top: 12px;
 }
 
-.footer-address{
 
-}
 
 .footer-text-container{
     display: flex;
@@ -50,4 +48,19 @@
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+}
+@media (max-width: 700px) {
+    .footer-text-container{
+        width: 200px;
+        text-align: left;
+        line-height: 24px;
+        padding-bottom: 18px;
+    }
+    .footer-links-container{
+        width: 160px;
+        text-align: right;
+    }
+    .footer-container{
+        height: 480px;
+    }
 }

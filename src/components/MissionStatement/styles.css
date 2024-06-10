@@ -28,9 +28,17 @@
     width: 350px;
 }
 
+.mission-image{
+    width: 350px;
+    text-align: center;
+}
+
 @media (max-width: 700px) {
     .main-container {
         padding: 48px 120px;
+    }
+    .mission-image {
+        width: 175px;
     }
 }
 

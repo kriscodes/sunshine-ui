@@ -1,0 +1,29 @@
+.contact-input{
+    width: 220px;
+    height: 32px;
+    padding: 0;
+    padding-left: 4px;
+    border-color: var(--primary-color-a);
+    box-shadow: 0 0;
+}
+.contact-item-container{
+    padding-top: 12px;
+}
+
+.contact-button{
+    background-color: var(--secondary-color);
+    width: 220px;
+    height: 32px;
+    border: 0;
+}
+.contact-form-container{
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+}
+.contact-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: row; 
+    padding: 0 20px 96px 20px;
+}
