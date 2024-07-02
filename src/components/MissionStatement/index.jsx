@@ -11,6 +11,27 @@ const MissionStatement = () => {
                 the field of Early Care and Education, centered on the whole-child approach to 
                 learning.
             </p>
+            <p>
+                As educators, our mission is to provide a safe and developmentally 
+                appropriate learning environment, which fosters a child’s natural desire to 
+                explore, discover, create, and become a lifelong learner. 
+            </p>
+            <p>
+                Establishing and maintaining secure connections with the children in our care, 
+                teaches them that they are part of a caring community that will continue to 
+                watch them grow with love. We believe respect, diversity, and inclusivity is 
+                very important in Early Childhood Education.
+            </p>
+            <p>
+                Sunshine is committed to providing an inclusive, and 
+                welcoming environment for all members of our staff, children, families, 
+                volunteers, subcontractors, and vendors. We do not discriminate against anyone 
+                on the basis of race, creed, color, ethnicity, national origin, religion, sexual 
+                orientation, gender expression, age, physical or mental ability, veteran status, 
+                military obligations, and marital status, in any of its activities or operations. 
+                At Sunshine, we aim to provide a learning environment that is inviting, accepting, 
+                understanding & ever-growing.
+            </p>
             <div className='container' >
                 <div className='main-flex-container'>
                     <div className='text-container'>

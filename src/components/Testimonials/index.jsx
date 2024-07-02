@@ -1,34 +1,43 @@
 import React, { useEffect, useState } from "react";
+import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+
 import './styles.css';
+
+export const Testimonial = ({ quote, author }) => {
+  return (
+    <div className="testimonial">
+      <p className="quote">
+        <span className="quote-mark">
+            <ImQuotesLeft />
+        </span>
+        {quote}
+        <span className="quote-mark">
+            <ImQuotesRight />
+        </span>
+      </p>
+      <p className="author">- {author}</p>
+    </div>
+  );
+};
 
 export const TextTestimonial = () => {
     
     return (
-        <div style={{display: "flex", flexDirection: "column"}}>
-            <div>
+        <div className="testimonial-container">
+            <div className="testimonial-title">
                 Testimonials
             </div>
-            <div className="test-container-m">
-                <div className="test-container-t">
-                    <span>
-                        "Lorem ipsum dolor sit amet, consectetur 
-                        adipiscing elit, sed do eiusmod tempor incididunt 
-                        ut labore et dolore magna aliqua."
-                    </span>
-                    <span>
-                        - This is a persons name
-                    </span>
-                </div>
-                <div className="test-container-b">
-                    <p>
-                        "Duis aute irure dolor in reprehenderit in 
-                        voluptate velit esse cillum dolore eu fugiat 
-                        nulla pariatur."
-                    </p>
-                    <span>
-                        - A persons name
-                    </span>
-                </div>
+            <div>
+            <Testimonial quote="Lorem ipsum dolor sit amet, consectetur 
+                adipiscing elit, sed do eiusmod tempor incididunt 
+                ut labore et dolore magna aliqua."
+                author="A person's name"/>
+            </div>
+            <div>
+            <Testimonial quote="Lorem ipsum dolor sit amet, consectetur 
+                adipiscing elit, sed do eiusmod tempor incididunt 
+                ut labore et dolore magna aliqua."
+                author="A person's name"/>
             </div>
         </div>
     )
