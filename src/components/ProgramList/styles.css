@@ -1,0 +1,17 @@
+.program-container{
+    width: 300px;
+    flex: 40%;
+    background-color: var(--secondary-color);
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.program-list-container{
+    display: flex;
+    gap: 80px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 160px;
+}
