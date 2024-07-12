@@ -1,0 +1,17 @@
+.form-container{
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    margin: 40px 120px; 
+    align-items: center; 
+    align-content: center; 
+}
+.form-input-container{
+    display: flex; 
+    justify-content: center;
+}
+
+.form-input-container label,
+.form-input-container select{
+    width: 160px;
+}
