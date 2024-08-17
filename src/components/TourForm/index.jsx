@@ -40,7 +40,7 @@ const TourForm = () => {
     <form onSubmit={handleSubmit}>
         <div>
             <div className="form-container">
-                <div>
+                <div style={{ marginRight: "24px"}}>
                     <div className="form-input-container">
                         <label>First Name:</label>
                         <input
@@ -137,7 +137,7 @@ const TourForm = () => {
                 onChange={handleDateChange}
                 value={selectedDate}
                 />
-                <button type="submit" style={{ marginTop: '20px' }}>Submit</button>
+                <button type="submit" className='form-button' style={{ marginTop: '20px' }}>Submit</button>
             </div>
       </div>
     </form>

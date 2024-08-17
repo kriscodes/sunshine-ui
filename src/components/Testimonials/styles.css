@@ -77,8 +77,8 @@ margin-top: 10px;
 }
 @media (max-width: 700px) {
     .testimonial-video-container{
-        width: 280px;
-        height: 160px;
+        width: 460px;
+        height: 270px;
     }
 }
 @media (max-width: 1200px) {

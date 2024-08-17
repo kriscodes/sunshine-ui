@@ -48,7 +48,7 @@ export const VideoTestimonial = () => {
     let iframeWidth = "560"
     useEffect(() => {
         if(width < 700) {
-            iframeWidth = "255";
+            iframeWidth = "500";
         }
     }, [width])
 
@@ -62,6 +62,7 @@ export const VideoTestimonial = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                 referrerpolicy="strict-origin-when-cross-origin" 
                 allowfullscreen
+                width={iframeWidth}
             >
             </iframe>
         </div>

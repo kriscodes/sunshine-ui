@@ -4,7 +4,9 @@ import Footer from '../../components/Footer';
 import ImageSlider from '../../components/ImageSlider';
 import TourForm from '../../components/TourForm';
 
-const Program = () => {
+const Program = (props) => {
+  const { name, description } = props;
+  console.log(props);
   return (
     <>
         <Header/>
@@ -13,7 +15,8 @@ const Program = () => {
         <div style={{ margin: '64px 0' }}>
           <div style={{display: 'flex', justifyContent: "center"}}>
             <div>
-              
+              {name}
+              {description}
             </div>
           </div>
           <div>
@@ -27,4 +30,5 @@ const Program = () => {
   );
 }
 
+// add time to events, and locations
 export default Program;

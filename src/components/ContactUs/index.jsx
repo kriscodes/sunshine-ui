@@ -36,7 +36,6 @@ const ContactUs = () => {
         <h1>Contact Us</h1>
         <form onSubmit={handleSubmit}>
           <div className='contact-item-container'>
-            
             <input
               className='contact-input'
               type="text"
