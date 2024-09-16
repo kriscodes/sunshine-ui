@@ -1,17 +1,15 @@
 .slider {
     position: relative;
-    width: 100%;
-    max-width: 100%;
     margin: auto;
     overflow: hidden;
-    max-height: 600px;
+    background-color: black;
   }
   
   .slider-image {
-    width: 100%;
-    height: auto;
+    width: auto;
+    max-height: 650px;
     display: block;
-    max-height: 600px;
+    margin: auto;
   }
   
   .left-arrow,

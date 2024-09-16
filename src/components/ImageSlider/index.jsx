@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
 
-const images = [
-  '/image.jpeg',
-  '/prek.jpg',
-  '/hands.jpeg',
+const images1 = [
+  '/lawndale/A7402329.jpg',
+  '/lawndale/A7402417.jpg',
+  '/lawndale/A7402539.jpg',
+  '/lawndale/IMG_3581.jpg',
+  '/lawndale/IMG_3872.jpg',
+  '/lawndale/IMG_8643.jpg'
 ];
 
-const ImageSlider = () => {
+const images2 = [
+  '/compton/image1.jpeg',
+  '/compton/image2.jpeg',
+  '/compton/image3.jpeg',
+  '/compton/image4.jpeg',
+  '/compton/image5.jpeg',
+  '/compton/image6.jpeg',
+  '/compton/image7.jpeg',
+  '/compton/image8.jpg',
+  '/compton/image9.jpg',
+]
+
+const ImageSlider = (props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const {location} = props;
 
   const goToNextSlide = () => {
+    let images = location === "c" ? images2 : images1;
     setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(goToNextSlide, 5000); // Switch every 1 second
+
+    // Cleanup the interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array means this will run only once
+
   const goToPreviousSlide = () => {
+    let images = location === "c" ? images2 : images1;
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
@@ -31,12 +56,18 @@ const ImageSlider = () => {
       <button className="left-arrow" onClick={goToPreviousSlide}>
         &#10094;
       </button>
-      <img src={images[currentIndex]} alt="slider" className="slider-image" />
+      <img src={location === 'c' ? images2[currentIndex] : images1[currentIndex]} alt="slider" className="slider-image" />
       <button className="right-arrow" onClick={goToNextSlide}>
         &#10095;
       </button>
       <div className="dots">
-        {images.map((_, index) => (
+        {location === 'c' ? images2.map((_, index) => (
+          <span
+            key={index}
+            className={`dot ${currentIndex === index ? 'active' : ''}`}
+            onClick={() => goToSlide(index)}
+          ></span>
+        )) : images1.map((_, index) => (
           <span
             key={index}
             className={`dot ${currentIndex === index ? 'active' : ''}`}

@@ -10,18 +10,24 @@ const ProgramList = () => {
                 {programs.map((program, index) => {
                     return (
                         <div className="program-container">
-                            <Link to={{
+                            {/*<Link to={{
                                 pathname: "/program",
                                 state: program
-                            }} style={{textDecoration: "none", color: "black"}}>
+                            }} style={{textDecoration: "none", color: "black"}}>*/}
                                 <div >
-                                    <img src={program.image} alt="" width="100%" height={"400px"}/>
+                                    <img 
+                                    style={{ maxHeight: "400px",  }}
+                                    src={program.image} 
+                                    alt="" 
+                                    width="100%" 
+                                    height={"auto"}
+                                    />
                                     <div>
                                         <p style={{ textAlign:"center" }}>{program.name}</p>
                                         <p style={{ padding: "8px 32px" }}>{program.description}</p>
                                     </div>
                                 </div>
-                            </Link>
+                            {/*</Link>*/}
                         </div>
                     );
                 })}

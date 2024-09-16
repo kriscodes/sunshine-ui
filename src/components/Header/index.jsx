@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="/path-to-your-logo.png" alt="Logo" />
+        <img src="/sunshine_logo.png" alt="Logo" />
       </div>
       <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
         <Link to="/">Home</Link>

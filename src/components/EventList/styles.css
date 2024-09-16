@@ -15,7 +15,8 @@
 .event-container{
     display: flex;
     background-color: var(--secondary-color);
-    
+    box-shadow: 0 4px 4px lightgray;
+    border-radius: 4px;
     width: 400px;
     height: 180px;
     padding: 24px;

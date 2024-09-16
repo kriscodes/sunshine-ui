@@ -8,6 +8,7 @@
 }
 .contact-item-container{
     padding-top: 12px;
+    position:relative;
 }
 
 .contact-button{
@@ -15,6 +16,8 @@
     width: 220px;
     height: 32px;
     border: 0;
+    box-shadow: 0 4px 4px rgb(148, 174, 185);
+    border-radius: 8px;
 }
 .contact-form-container{
     width: 360px;

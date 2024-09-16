@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
+import TimePicker from 'react-time-picker';
 import 'react-calendar/dist/Calendar.css';
 import './styles.css';
 
@@ -14,6 +15,11 @@ const TourForm = () => {
     program: '',
     school: ''
   });
+  const [time, setTime] = useState();
+
+  const handleTimeChange = (time) => {
+    setTime(time);
+  };
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -39,6 +45,7 @@ const TourForm = () => {
     
     <form onSubmit={handleSubmit}>
         <div>
+            <h2 style={{ textAlign: 'center' }}>Schedule A Tour</h2>
             <div className="form-container">
                 <div style={{ marginRight: "24px"}}>
                     <div className="form-input-container">
@@ -131,11 +138,16 @@ const TourForm = () => {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '32px', position:'relative' }}>
                 <label>Select Date and Time:</label>
                 <Calendar
                 onChange={handleDateChange}
                 value={selectedDate}
+                />
+                <TimePicker
+                    className={'react-time-picker__inputGroup'}
+                    value={time || ""}
+                    onChange={(time) => handleTimeChange(time, 'from')}
                 />
                 <button type="submit" className='form-button' style={{ marginTop: '20px' }}>Submit</button>
             </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import './styles.css'
 
 const Footer = () => {
@@ -25,22 +26,17 @@ const Footer = () => {
             </div>
             <div className="footer-links-container">
                 <div>
-                    <img className='footer-logo' src='/sunshine.jpeg' alt='sunshine' width='70%' />
+                    <img className='footer-logo' src='/sunshine_logo.png' alt='sunshine' width='70%' />
                 </div>
                 <span className="footer-link">
-                    <a href="">
-                        Enrolmment
-                    </a>
-                </span>
-                <span className="footer-link">
-                    <a href="">
+                    <Link to="/privacy-policy">
                         Privacy Policy
-                    </a>
+                    </Link>
                 </span>
                 <span  className="footer-link">
-                    <a href="">
+                    <Link to="/terms-of-use">
                         Terms of Use
-                    </a>
+                    </Link>
                 </span>
                 <span className="footer-copyright">
                     &copy; Copyright {currentYear} Sunshine Preschools

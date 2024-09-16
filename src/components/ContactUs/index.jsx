@@ -76,7 +76,6 @@ const ContactUs = () => {
               placeholder='Email'
               value={formData.email}
               onChange={handleChange}
-              required
             />
           </div>
           <div className='contact-item-container'>
@@ -85,7 +84,6 @@ const ContactUs = () => {
             className='contact-input'
             value={formData.reason} 
             onChange={handleChange} 
-            required
             >
               <option value="">Reason for Call</option>
               <option value="support">Support</option>

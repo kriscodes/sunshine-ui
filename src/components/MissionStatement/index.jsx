@@ -5,6 +5,7 @@ const MissionStatement = () => {
 
     return (
         <div className='main-container'>
+            <h2>Mission Statement</h2>
             <p>
                 Sunshine is dedicated to meeting the individual needs of children and families, 
                 fostering a sense of pride in self and community, as it upholds best practices in 
@@ -27,7 +28,7 @@ const MissionStatement = () => {
                 understanding & ever-growing.
                 As educators, our mission is to provide a safe and developmentally 
                 appropriate learning environment, which fosters a child’s natural desire to 
-                explore, discover, create, and become a lifelong learner. \
+                explore, discover, create, and become a lifelong learner.
                 Establishing and maintaining secure connections with the children in our care, 
                 teaches them that they are part of a caring community that will continue to 
                 watch them grow with love. We believe respect, diversity, and inclusivity is 

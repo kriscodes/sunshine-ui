@@ -6,11 +6,19 @@
     padding: 20px 32px;
     margin: 20px;
     max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 8px rgba(126, 153, 151, 0.5);
 }
 .location-name{
     color: #000;
     font-size: 42px;
     font-weight: 700;
     text-align: center;
+}
+.link{
+    text-decoration: none;
+    color: #000;
+}
+.link:visited{
+    text-decoration: none;
+    color: #000;
 }
