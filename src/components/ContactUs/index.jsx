@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import './styles.css'
 import axios from 'axios';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     phone: '',
     email: '',
     reason: ''
   });
 
-  const handleChange = (e) => {
+  const { handleSubmit, formState: { errors } } = useForm();
+
+  const handleFirstNameChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -19,11 +22,43 @@ const ContactUs = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleLastNameChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handlePhoneChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleEmailChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleReasonChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+
+  const onSubmit = async (e) => {
     try {
-      await axios.post('/api/sendEmail', formData);
-      alert('Email sent successfully!');
+      await axios.post('https://dev.api.sunshinepreschool1-2.org/api/contacts', formData);
+      
     } catch (error) {
       console.error('Error sending email', error);
       alert('Failed to send email.');
@@ -34,15 +69,15 @@ const ContactUs = () => {
     <div className='contact-container'>
       <div className='contact-form-container'>
         <h1>Contact Us</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='contact-item-container'>
             <input
               className='contact-input'
               type="text"
-              name="firstName"
+              name="first_name"
               placeholder='First Name'
               value={formData.firstName}
-              onChange={handleChange}
+              onChange={handleFirstNameChange}
               required
             />
           </div>
@@ -50,10 +85,10 @@ const ContactUs = () => {
             <input
               className='contact-input'
               type="text"
-              name="lastName"
+              name="last_name"
               placeholder='Last Name'
               value={formData.lastName}
-              onChange={handleChange}
+              onChange={handleLastNameChange}
               required
             />
           </div>
@@ -64,7 +99,7 @@ const ContactUs = () => {
               name="phone"
               placeholder='Phone Number'
               value={formData.phone}
-              onChange={handleChange}
+              onChange={handlePhoneChange}
               required
             />
           </div>
@@ -75,7 +110,7 @@ const ContactUs = () => {
               name="email"
               placeholder='Email'
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
             />
           </div>
           <div className='contact-item-container'>
@@ -83,7 +118,7 @@ const ContactUs = () => {
             name="reason" 
             className='contact-input'
             value={formData.reason} 
-            onChange={handleChange} 
+            onChange={handleReasonChange} 
             >
               <option value="">Reason for Call</option>
               <option value="support">Support</option>

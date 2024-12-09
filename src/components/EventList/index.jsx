@@ -1,8 +1,28 @@
-import React from "react";
-import events from '../../data/events.json'
+import React, {useEffect, useState} from "react";
+import axios from "axios";
 import "./styles.css"
 
 const EventList = () => {
+
+    const [events, setEvents] = useState([]);
+
+    useEffect( () => {
+        try{
+          async function fetchEvents() {
+            await axios.get('https://dev.api.sunshinepreschool1-2.org/api/events')
+          .then(res => {
+            const c = res.data;
+            setEvents(c);
+            console.log(c);
+          });
+          }
+          fetchEvents();
+        }
+        catch(err){
+          console.log(err);
+        }
+      }, [])
+
     return (
         <div>
             <p className="event-title">
@@ -14,7 +34,8 @@ const EventList = () => {
                         <div className="event-container">
                             <img src="/kids.jpg" alt="" width="160" />
                             <div>
-                                <p>{event.name}</p>
+                                <p>{event.title}</p>
+                                <p>{event.location}</p>
                                 <p>{event.date}</p>
                                 <p>{event.description}</p>
                             </div>

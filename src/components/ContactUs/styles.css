@@ -5,6 +5,7 @@
     padding-left: 4px;
     border-color: var(--primary-color-a);
     box-shadow: 0 0;
+    position: relative;
 }
 .contact-item-container{
     padding-top: 12px;

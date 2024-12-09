@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import TimePicker from 'react-time-picker';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
 import 'react-calendar/dist/Calendar.css';
 import './styles.css';
 
 const TourForm = () => {
+
+  const { handleSubmit, formState: { errors } } = useForm();
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
-    childFirstName: '',
+    child_name: '',
     childBirthday: '',
     program: '',
-    school: ''
+    school: '',
+    tour_date: '',
+    tour_time: '',
   });
   const [time, setTime] = useState();
 
-  const handleTimeChange = (time) => {
-    setTime(time);
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleChange = (e) => {
+  const handleTimeChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -31,19 +30,45 @@ const TourForm = () => {
     });
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name);
+    console.log(value);
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    
+    let date = value + " " + formData.tour_time + ":00"
+    console.log(date);
+    setFormData({
+        ...formData,
+        [name]: date
+      });
+  };
+
+  const onSubmit = async(e) => {
+
     // Handle form submission logic
-    console.log(formData, selectedDate);
+    console.log(formData);
+
+    try {
+        await axios.post('https://dev.api.sunshinepreschool1-2.org/api/tours', formData);
+      } catch (error) {
+        console.error('Error creating event', error);
+        alert('Failed to create event.');
+      }
   };
 
   return (
     
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
         <div>
             <h2 style={{ textAlign: 'center' }}>Schedule A Tour</h2>
             <div className="form-container">
@@ -52,8 +77,8 @@ const TourForm = () => {
                         <label>First Name:</label>
                         <input
                             type="text"
-                            name="firstName"
-                            value={formData.firstName}
+                            name="first_name"
+                            value={formData.first_name}
                             onChange={handleChange}
                             required
                         />
@@ -69,11 +94,11 @@ const TourForm = () => {
                         />
                     </div>
                     <div className="form-input-container">
-                        <label>Child's First Name:</label>
+                        <label>Child's Name:</label>
                         <input
                             type="text"
-                            name="childFirstName"
-                            value={formData.childFirstName}
+                            name="child_name"
+                            value={formData.child_name}
                             onChange={handleChange}
                             required
                         />
@@ -97,8 +122,8 @@ const TourForm = () => {
                         <label>Last Name:</label>
                         <input
                             type="text"
-                            name="lastName"
-                            value={formData.lastName}
+                            name="last_name"
+                            value={formData.last_name}
                             onChange={handleChange}
                             required
                         />
@@ -114,13 +139,22 @@ const TourForm = () => {
                         />
                     </div>
                     <div className="form-input-container">
-                        <label>Child's Birthday:</label>
+                        <label>Tour Date </label>
                         <input
-                        type="date"
-                        name="childBirthday"
-                        value={formData.childBirthday}
-                        onChange={handleChange}
-                        required
+                            type="date"
+                            name="tour_date"
+                            onChange={handleDateChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-input-container">
+                        <label>Tour Time </label>
+                        <input
+                            type="time"
+                            name="tour_time"
+                            value={formData.tour_time}
+                            onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className="form-input-container">
@@ -139,16 +173,6 @@ const TourForm = () => {
                 </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '32px', position:'relative' }}>
-                <label>Select Date and Time:</label>
-                <Calendar
-                onChange={handleDateChange}
-                value={selectedDate}
-                />
-                <TimePicker
-                    className={'react-time-picker__inputGroup'}
-                    value={time || ""}
-                    onChange={(time) => handleTimeChange(time, 'from')}
-                />
                 <button type="submit" className='form-button' style={{ marginTop: '20px' }}>Submit</button>
             </div>
       </div>
