@@ -17,7 +17,7 @@ function Home() {
     <div>
         <Header/>
         <ImageSlider location={l}/>
-        <Submenu/>
+        {/*<Submenu/>*/}
         <div className="container">
             <MissionStatement/>
             <TextTestimonial/>

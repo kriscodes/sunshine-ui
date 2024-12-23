@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import 'react-calendar/dist/Calendar.css';
@@ -18,52 +18,47 @@ const TourForm = () => {
     program: '',
     school: '',
     tour_date: '',
-    tour_time: '',
+    tour_time: '09:30:00',
   });
-  const [time, setTime] = useState();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handlePhoneChange = (e) => {
+    const { name, value } = e.target;
+    let number = value.replace(/\D/g,'');
+    setFormData({
+        ...formData,
+        [name]: number
+    });
+  };
 
   const handleTimeChange = (e) => {
     const { name, value } = e.target;
     setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(name);
-    console.log(value);
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleDateChange = (e) => {
-    const { name, value } = e.target;
-    
-    let date = value + " " + formData.tour_time + ":00"
-    console.log(date);
-    setFormData({
         ...formData,
-        [name]: date
+        'tour_time': value
       });
   };
 
-  const onSubmit = async(e) => {
-
-    // Handle form submission logic
+  const updateTours = async () => {
     console.log(formData);
-
     try {
         await axios.post('https://dev.api.sunshinepreschool1-2.org/api/tours', formData);
       } catch (error) {
         console.error('Error creating event', error);
         alert('Failed to create event.');
       }
+  };
+
+  const onSubmit = async(e) => {
+    updateTours();
   };
 
   return (
@@ -134,40 +129,44 @@ const TourForm = () => {
                             type="tel"
                             name="phone"
                             value={formData.phone}
-                            onChange={handleChange}
+                            onChange={handlePhoneChange}
                             required
                         />
                     </div>
                     <div className="form-input-container">
-                        <label>Tour Date </label>
+                        <label>Tour Date</label>
                         <input
                             type="date"
                             name="tour_date"
-                            onChange={handleDateChange}
+                            onChange={handleChange}
                             required
                         />
                     </div>
                     <div className="form-input-container">
                         <label>Tour Time </label>
-                        <input
-                            type="time"
-                            name="tour_time"
-                            value={formData.tour_time}
-                            onChange={handleChange}
-                            required
-                        />
+                        <select name="date_time" id="date_time" onChange={handleTimeChange}>
+                            <option value="09:30 AM">9:30 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="10:30 AM">10:30 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="11:30 AM">11:30 AM</option>
+                            <option value="1:30 PM">1:30 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="2:30 PM">2:30 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="3:30 PM">3:30 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                        </select>
                     </div>
                     <div className="form-input-container">
-                        <label>School:</label>
+                        <label>Select School</label>
                         <select
                         name="school"
-                        value={formData.school}
                         onChange={handleChange}
                         required
                         >
-                        <option value="">Select School</option>
-                        <option value="school1">School 1</option>
-                        <option value="school2">School 2</option>
+                        <option value="school1">Compton</option>
+                        <option value="school2">Lawndale</option>
                         </select>
                     </div>
                 </div>
