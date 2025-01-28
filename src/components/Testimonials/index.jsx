@@ -28,16 +28,12 @@ export const TextTestimonial = () => {
                 Testimonials
             </div>
             <div>
-            <Testimonial quote="Lorem ipsum dolor sit amet, consectetur 
-                adipiscing elit, sed do eiusmod tempor incididunt 
-                ut labore et dolore magna aliqua."
-                author="A person's name"/>
-            </div>
-            <div>
-            <Testimonial quote="Lorem ipsum dolor sit amet, consectetur 
-                adipiscing elit, sed do eiusmod tempor incididunt 
-                ut labore et dolore magna aliqua."
-                author="A person's name"/>
+            <Testimonial quote="I have been bringing my kids to this 
+            place since they were toddlers, now they are 10 and the 
+            other just turned 12. This place has been like a second 
+            home to them. They laugh, they play, and they learn within 
+            a great friendly environment."
+                author="Judy P. YELP"/>
             </div>
         </div>
     )

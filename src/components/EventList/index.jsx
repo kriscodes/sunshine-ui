@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./styles.css"
 
-const EventList = () => {
+const EventList = (props) => {
 
     const [events, setEvents] = useState([]);
 
@@ -12,8 +12,22 @@ const EventList = () => {
             await axios.get('https://dev.api.sunshinepreschool1-2.org/api/events')
           .then(res => {
             const c = res.data;
-            setEvents(c);
-            console.log(c);
+            console.log(props.location);
+            if(props.location === 'Lynwood') {
+                const filteredLynwoodData = c.filter((item) => {
+                    return item.location.includes('Lynwood')
+                })
+                setEvents(filteredLynwoodData);
+            }
+            else if(props.location === 'Compton') {
+                const filteredComptonData = c.filter((item) => {
+                    return item.location.includes('Compton')
+                })
+                setEvents(filteredComptonData);
+            }
+            else {
+                setEvents(c);
+            }
           });
           }
           fetchEvents();
@@ -30,9 +44,12 @@ const EventList = () => {
             </p>
             <div className="event-list-container">
                 {events.map((event, index) => {
+
                     return (
-                        <div className="event-container">
-                            <img src="/kids.jpg" alt="" width="160" />
+                        <div className="event-container" key={index}>
+                            <div className="event-picture">
+                                <img src="/sunshine_logo.png" alt="" width="160" />
+                            </div>
                             <div>
                                 <p>{event.title}</p>
                                 <p>{event.location}</p>

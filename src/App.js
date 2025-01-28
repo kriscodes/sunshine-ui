@@ -9,6 +9,8 @@ import Program from './pages/Program';
 import Events from './pages/Events';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsofUse from './pages/TermsofUse';
+import Compton from './pages/Compton';
+import Lynwood from './pages/Lynwood';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/program" element={<Program/>} />
         <Route path="/events" element={<Events/>} />
         <Route path="/location" element={<Location/>} />
+        <Route path="/compton" element={<Compton/>} />
+        <Route path="/lynwood" element={<Lynwood/>} />
         <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
         <Route path="/terms-of-use" element={<TermsofUse/>} />
       </Routes>

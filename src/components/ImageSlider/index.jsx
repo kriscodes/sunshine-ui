@@ -34,11 +34,9 @@ const ImageSlider = (props) => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(goToNextSlide, 5000); // Switch every 1 second
-
-    // Cleanup the interval when component unmounts
+    const intervalId = setInterval(goToNextSlide, 5000); 
     return () => clearInterval(intervalId);
-  }, []); // Empty dependency array means this will run only once
+  }, []); 
 
   const goToPreviousSlide = () => {
     let images = location === "c" ? images2 : images1;

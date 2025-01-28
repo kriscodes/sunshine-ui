@@ -37,6 +37,10 @@
     width: 350px;
     height: 32px;
     border: 0;
+    cursor: pointer;
+}
+.form-button:focus{
+    background-image: linear-gradient(var(--button-focus-color-a), var(--button-focus-color-b));
 }
 
 .react-time-picker__inputGroup__input.react-time-picker__inputGroup__minute{

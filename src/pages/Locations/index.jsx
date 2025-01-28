@@ -11,7 +11,7 @@ const LocationCard = (props) => {
   return (
     
       <div className="location-card">
-        <Link to="/location" className="link">
+        <Link to={props.name === "Compton" ? "/compton" : "/lynwood"} className="link">
         <p className="location-name">
           {name}
         </p>
@@ -44,9 +44,6 @@ function Locations() {
           <div style={{ display: 'flex', justifyContent: "center" }}>
             <LocationCard name="Compton"/>
             <LocationCard name="Lynwood"/>
-          </div>
-          <div style={{display: 'flex', justifyContent: "center"}}>
-            <EventList/>
           </div>
           
         </div>

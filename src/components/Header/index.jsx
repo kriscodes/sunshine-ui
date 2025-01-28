@@ -19,7 +19,6 @@ const Header = () => {
         <Link to="/">Home</Link>
         <Link to="/locations">Locations</Link>
         <Link to="/programs">Programs</Link>
-        <Link to="/events">Events</Link>
       </nav>
       <div className="hamburger" onClick={toggleMenu}>
         <div className="bar"></div>

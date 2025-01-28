@@ -107,8 +107,10 @@ const TourForm = () => {
                             required
                         >
                             <option value="">Select...</option>
-                            <option value="program1">Program 1</option>
-                            <option value="program2">Program 2</option>
+                            <option value="TWO-YEAR-OLD PROGRAM">TWO-YEAR-OLD PROGRAM</option>
+                            <option value="THREE-YEAR-OLD PROGRAM">THREE-YEAR-OLD PROGRAM</option>
+                            <option value="AFTER-SCHOOL PROGRAM">AFTER-SCHOOL PROGRAM</option>
+                            <option value="PRE-K CLASS">PRE-K CLASS</option>
                         </select>
                     </div>
                 </div>
@@ -165,14 +167,14 @@ const TourForm = () => {
                         onChange={handleChange}
                         required
                         >
-                        <option value="school1">Compton</option>
-                        <option value="school2">Lawndale</option>
+                        <option value="Compton">Compton</option>
+                        <option value="Lynwood">Lynwood</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '32px', position:'relative' }}>
-                <button type="submit" className='form-button' style={{ marginTop: '20px' }}>Submit</button>
+                <button type="submit" className='form-button'>Submit</button>
             </div>
       </div>
     </form>

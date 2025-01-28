@@ -19,6 +19,11 @@
     border: 0;
     box-shadow: 0 4px 4px rgb(148, 174, 185);
     border-radius: 8px;
+    cursor: pointer;
+}
+
+.contact-button:focus{
+    background-image: linear-gradient(var(--button-focus-color-a), var(--button-focus-color-b));
 }
 .contact-form-container{
     width: 360px;
