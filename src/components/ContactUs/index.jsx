@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import './styles.css'
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import './styles.css'
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -57,11 +58,19 @@ const ContactUs = () => {
 
   const onSubmit = async (e) => {
     try {
-      await axios.post('https://dev.api.sunshinepreschool1-2.org/api/contacts', formData);
-      
+      await axios.post('https://api.sunshinepreschool1-2.org/api/contacts', formData);
+      const notify = () => toast.success("Success! Please check your email.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "light",
+      });
+      notify();
     } catch (error) {
       console.error('Error sending email', error);
-      alert('Failed to send email.');
     }
   };
 
@@ -153,6 +162,7 @@ const ContactUs = () => {
             (424) 338-3053
         </span>
       </div>
+      <ToastContainer />
     </div>
   );
 };

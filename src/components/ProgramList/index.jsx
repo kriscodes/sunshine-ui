@@ -16,11 +16,17 @@ const ProgramList = () => {
                             }} style={{textDecoration: "none", color: "black"}}>*/}
                                 <div >
                                     <img 
-                                    style={{ maxHeight: "400px",  }}
+                                    style={{ 
+                                        maxHeight: "400px",  
+                                        maxWidth: "300px",
+                                        display: "block",
+                                        width: "auto",
+                                        height: "auto",
+                                        marginLeft: "auto",
+                                        marginRight: "auto"
+                                    }}
                                     src={program.image} 
                                     alt="" 
-                                    width="100%" 
-                                    height={"auto"}
                                     />
                                     <div>
                                         <p style={{ textAlign:"center" }}>{program.name}</p>

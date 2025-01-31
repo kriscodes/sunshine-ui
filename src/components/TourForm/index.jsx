@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import 'react-calendar/dist/Calendar.css';
+import { ToastContainer, toast } from 'react-toastify';
 import './styles.css';
 
 const TourForm = () => {
@@ -48,12 +49,21 @@ const TourForm = () => {
   };
 
   const updateTours = async () => {
-    console.log(formData);
     try {
-        await axios.post('https://dev.api.sunshinepreschool1-2.org/api/tours', formData);
+        await axios.post('https://api.sunshinepreschool1-2.org/api/tours', formData);
+        const notify = () => toast.success("Success! Please check your email.", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          });
+          notify();
       } catch (error) {
-        console.error('Error creating event', error);
-        alert('Failed to create event.');
+        console.error('Error scheduling tour', error);
       }
   };
 
@@ -177,6 +187,7 @@ const TourForm = () => {
                 <button type="submit" className='form-button'>Submit</button>
             </div>
       </div>
+      <ToastContainer />
     </form>
   );
 };
