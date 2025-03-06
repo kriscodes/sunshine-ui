@@ -12,7 +12,7 @@ function Programs() {
         <ImageSlider/>
 
         <div style={{ margin: '64px 0' }}>
-          <div style={{display: 'flex', justifyContent: "center"}}>
+          <div style={{textAlign: 'center'}}>
             <h1>Classrooms</h1>
             <div>
               <ProgramList/>
