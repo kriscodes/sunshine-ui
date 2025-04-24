@@ -1,0 +1,20 @@
+.enrollment-button {
+    color: black;
+    text-align: center;
+    position: relative;
+    background-color: var(--secondary-color);
+    width: 260px;
+    height: 26px;
+    padding-top: 8px;
+    margin-top: 16px;
+    border: 0;
+    box-shadow: 0 4px 4px rgb(148, 174, 185);
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.enrollment-container {
+    display: flex;
+    justify-content: center;
+}

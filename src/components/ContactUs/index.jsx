@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import EnrollmentForm from '../EnrollmentForm';
 import './styles.css'
 
 const ContactUs = () => {
@@ -161,7 +162,9 @@ const ContactUs = () => {
             Compton, CA 90221 <br/>
             (424) 338-3053
         </span>
+        <EnrollmentForm/>
       </div>
+      
       <ToastContainer />
     </div>
   );
