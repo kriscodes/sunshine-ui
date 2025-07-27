@@ -1,0 +1,58 @@
+.form-container{
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    margin: 40px 120px; 
+    align-items: center; 
+    align-content: center; 
+    position:relative;
+}
+.form-input-container{
+    display: flex; 
+    margin: 12px 0;
+}
+
+.form-input-container label,
+.form-input-container select{
+    width: 160px;
+}
+.form-input-container select{
+    width: 190px;
+    padding: 4px;
+}
+.form-input-container input
+{
+    border-color:lightgrey;
+    border-top-color: lightgrey;;
+    border-width: 1px;
+    border-radius: 4px;
+    box-shadow:lightgray 1px 1px 3px;
+    width: 180px;
+    padding: 4px;
+}
+.form-button{
+    background-image: linear-gradient(var(--secondary-color), var(--secondary-linear));
+    border-radius: 8px;
+    box-shadow: rgb(156, 173, 173) 0 4px 4px;
+    width: 350px;
+    height: 32px;
+    border: 0;
+    cursor: pointer;
+}
+.form-button:focus{
+    background-image: linear-gradient(var(--button-focus-color-a), var(--button-focus-color-b));
+}
+
+.react-time-picker__inputGroup__input.react-time-picker__inputGroup__minute{
+    width: 90px !important;
+    padding: 8px;
+    margin: 12px;
+}
+.react-time-picker__inputGroup__hour.react-time-picker__inputGroup__input{
+    width: 90px !important;
+    padding: 8px;
+}
+.react-time-picker__inputGroup__amPm.react-time-picker__inputGroup__input{
+    width: 64px !important;
+    padding: 8px;
+}
