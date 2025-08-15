@@ -59,7 +59,7 @@ const ContactUs = () => {
 
   const onSubmit = async (e) => {
     try {
-      await axios.post('https://api.sunshinepreschool1-2.org/api/contacts', formData);
+      await axios.post('https://sunshine-api.onrender.com/contacts', formData);
       const notify = () => toast.success("Success! Please check your email.", {
         position: "top-center",
         autoClose: 2000,

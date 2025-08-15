@@ -9,7 +9,7 @@ const EventList = (props) => {
     useEffect( () => {
         try{
           async function fetchEvents() {
-            await axios.get('https://api.sunshinepreschool1-2.org/api/events')
+            await axios.get('https://sunshine-api.onrender.com/events')
           .then(res => {
             const c = res.data;
             console.log(props.location);
