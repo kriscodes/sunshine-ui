@@ -50,7 +50,7 @@ const TourForm = () => {
 
   const updateTours = async () => {
     try {
-        await axios.post('https://api.sunshinepreschool1-2.org/api/tours', formData);
+        await axios.post('https://sunshine-api.onrender.com/tours', formData);
         const notify = () => toast.success("Success! Please check your email.", {
             position: "top-center",
             autoClose: 2000,
