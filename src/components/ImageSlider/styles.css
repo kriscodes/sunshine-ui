@@ -1,56 +1,136 @@
-.slider {
-    position: relative;
-    margin: auto;
-    overflow: hidden;
-    background-color: black;
+/* Container: full-bleed hero with responsive height */
+.su-imageSlider {
+  position: relative;
+  width: 100vw;                 /* full browser width */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;           /* full-bleed trick if inside centered layouts */
+  margin-right: -50vw;
+
+  height: var(--su-slider-height, clamp(420px, 65vh, 860px));
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  isolation: isolate;           /* correct stacking for overlays */
+}
+
+/* Slides layer */
+.su-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.su-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* perfect crop on resize */
+  object-position: center;
+  opacity: 0;
+  transition: opacity 900ms ease-in-out;
+  will-change: opacity;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.su-slide.is-active { opacity: 1; }
+
+/* Readability shade (left→right) */
+.su-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.25) 40%,
+    rgba(0, 0, 0, 0.10) 65%,
+    rgba(0, 0, 0, 0.00) 100%
+  );
+}
+
+/* Fade-to-black overlay */
+.su-blackout {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity var(--su-fade-ms, 600ms) ease-in-out;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.su-blackout.is-visible { opacity: 1; }
+
+/* Content overlay (glass panel) */
+.su-contentWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  padding: clamp(16px, 3vw, 40px);
+}
+
+.align-left   { justify-items: start; }
+.align-center { justify-items: center; }
+.align-right  { justify-items: end; }
+
+.su-content.su-glass {
+  max-width: min(780px, 92vw);
+  padding: clamp(14px, 2.2vw, 24px) clamp(18px, 2.6vw, 28px);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* Optional typography (adjust to your design system) */
+.su-content h1 {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 5.2vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+
+.su-content p {
+  margin: 0 0 16px;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+/* Navigation arrows */
+.su-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  background: rgba(0,0,0,0.35);
+  border: none;
+  color: #fff;
+  font-size: clamp(22px, 2.6vw, 34px);
+  line-height: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 160ms ease-in-out;
+}
+.su-nav:hover { background: rgba(0,0,0,0.5); }
+.su-nav--prev { left: 14px; }
+.su-nav--next { right: 14px; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .su-slide,
+  .su-blackout {
+    transition: none;
   }
-  
-  .slider-image {
-    width: auto;
-    max-height: 650px;
-    display: block;
-    margin: auto;
-  }
-  
-  .left-arrow,
-  .right-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 500;
-  }
-  
-  .left-arrow {
-    left: 10px;
-  }
-  
-  .right-arrow {
-    right: 10px;
-  }
-  
-  .dots {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .dot {
-    height: 15px;
-    width: 15px;
-    margin: 0 5px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    display: inline-block;
-    cursor: pointer;
-  }
-  
-  .dot.active {
-    background-color: rgba(255, 255, 255, 1);
-  }
+}

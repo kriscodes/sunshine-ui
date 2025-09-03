@@ -1,45 +1,49 @@
-import React from "react";
+import React from 'react';
 import programs from '../../data/programs.json'
-import { Link } from 'react-router-dom';
-import "./styles.css"
+import './styles.css';
 
-const ProgramList = () => {
-    return (
-        <div>
-            <div className="program-list-container">
-                {programs.map((program, index) => {
-                    return (
-                        <div className="program-container">
-                            {/*<Link to={{
-                                pathname: "/program",
-                                state: program
-                            }} style={{textDecoration: "none", color: "black"}}>*/}
-                                <div >
-                                    <img 
-                                    style={{ 
-                                        maxHeight: "400px",  
-                                        maxWidth: "300px",
-                                        display: "block",
-                                        width: "auto",
-                                        height: "auto",
-                                        marginLeft: "auto",
-                                        marginRight: "auto"
-                                    }}
-                                    src={program.image} 
-                                    alt="" 
-                                    />
-                                    <div>
-                                        <p style={{ textAlign:"center" }}>{program.name}</p>
-                                        <p style={{ padding: "8px 32px" }}>{program.description}</p>
-                                    </div>
-                                </div>
-                            {/*</Link>*/}
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-    )
+export default function ProgramList() {
+  // Lock to exactly 4 items to guarantee a 2x2 grid
+  const items = programs.slice(0, 4);
+
+  // If fewer than 4, add invisible placeholders so the grid stays 2x2
+  const placeholders = Array.from({ length: Math.max(0, 4 - items.length) }, (_, i) => ({
+    __placeholder: true,
+    id: `placeholder-${i}`,
+  }));
+
+  return (
+    <section className="programs-section" aria-labelledby="programs-heading">
+      {/* Optional section title (hide if you don't use it) */}
+      {/* <h2 id="programs-heading" className="sr-only">Programs</h2> */}
+
+      <ul className="program-list" role="list" aria-label="Programs">
+        {[...items, ...placeholders].map((p) =>
+          p.__placeholder ? (
+            <li key={p.id} className="program-card program-card--ghost" aria-hidden="true" />
+          ) : (
+            <li key={p.id || p.slug || p.title} className="program-card">
+              {/* Uniform image box (same visual size for all images) */}
+              <div
+                className="program-card__media"
+                style={p.objectPosition ? { '--object-position': p.objectPosition } : undefined}
+              >
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <div className="program-card__body">
+                <h3 className="program-card__title">{p.title}</h3>
+                <p className="program-card__desc">{p.description}</p>
+              </div>
+            </li>
+          )
+        )}
+      </ul>
+    </section>
+  );
 }
-
-export default ProgramList;
