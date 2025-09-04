@@ -17,6 +17,7 @@ const EventList = (props) => {
                 const filteredLynwoodData = c.filter((item) => {
                     return item.location.includes('Lynwood')
                 })
+                console.log(filteredLynwoodData);
                 setEvents(filteredLynwoodData);
             }
             else if(props.location === 'Compton') {
@@ -42,6 +43,7 @@ const EventList = (props) => {
             <p className="event-title">
                 Events
             </p>
+            {events && 
             <div className="event-list-container">
                 {events.map((event, index) => {
                     console.log(event)
@@ -60,6 +62,9 @@ const EventList = (props) => {
                     );
                 })}
             </div>
+            
+            }
+            
         </div>
     )
 }
