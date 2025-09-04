@@ -49,14 +49,11 @@ const EventList = (props) => {
                     console.log(event)
                     return (
                         <div className="event-container" key={index}>
-                            <div className="event-picture">
-                                <img src="/sunshine_logo.png" alt="" width="160" />
-                            </div>
                             <div>
-                                <p>{event.name}</p>
-                                <p>{event.location}</p>
-                                <p>{event.date}</p>
-                                <p>{event.description}</p>
+                                <p>{event?.name}</p>
+                                <p>{event?.location}</p>
+                                <p>{event?.date}</p>
+                                <p>{event?.description}</p>
                             </div>
                         </div>
                     );
