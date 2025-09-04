@@ -15,7 +15,9 @@ const EventList = (props) => {
             console.log(res);
             console.log(props.location);
             if(props.location === 'Lynwood') {
+                console.log('inside props.location if statement');
                 const filteredLynwoodData = c.filter((item) => {
+                    console.log('inside filter for lynwood')
                     return item.location.includes('lynwood')
                 })
                 console.log(filteredLynwoodData);
