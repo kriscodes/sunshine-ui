@@ -16,7 +16,7 @@ const EventList = (props) => {
             console.log(props.location);
             if(props.location === 'Lynwood') {
                 const filteredLynwoodData = c.filter((item) => {
-                    return item.location.includes('Lynwood')
+                    return item.location.includes('lynwood')
                 })
                 console.log(filteredLynwoodData);
                 setEvents(filteredLynwoodData);
