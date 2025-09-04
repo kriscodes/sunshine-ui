@@ -12,6 +12,7 @@ const EventList = (props) => {
             await axios.get('https://sunshine-api.onrender.com/events')
           .then(res => {
             const c = res.data;
+            console.log(res);
             console.log(props.location);
             if(props.location === 'Lynwood') {
                 const filteredLynwoodData = c.filter((item) => {
