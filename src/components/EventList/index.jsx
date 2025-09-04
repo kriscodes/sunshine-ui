@@ -9,7 +9,7 @@ const EventList = (props) => {
     useEffect( () => {
         try{
           async function fetchEvents() {
-            await axios.get('https://dev.api.sunshinepreschool1-2.org/api/events')
+            await axios.get('https://sunshine-api.onrender.com/events')
           .then(res => {
             const c = res.data;
             console.log(props.location);
@@ -44,7 +44,6 @@ const EventList = (props) => {
             </p>
             <div className="event-list-container">
                 {events.map((event, index) => {
-
                     return (
                         <div className="event-container" key={index}>
                             <div className="event-picture">
