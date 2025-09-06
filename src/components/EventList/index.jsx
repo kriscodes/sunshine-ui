@@ -12,7 +12,7 @@ const EventList = (props) => {
             await axios.get('https://sunshine-api.onrender.com/events')
           .then(res => {
             const c = res.data;
-            console.log(res);
+            console.log(res.data);
             console.log(props.location);
             if(props.location === 'Lynwood') {
                 console.log('inside props.location if statement');
