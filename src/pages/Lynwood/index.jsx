@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider'
 import EventList from '../../components/EventList';
