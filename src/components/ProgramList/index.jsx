@@ -37,7 +37,7 @@ export default function ProgramList() {
               </div>
 
               <div className="program-card__body">
-                <h3 className="program-card__title">{p.title}</h3>
+                <h3 className="program-card__title">{p.name}</h3>
                 <p className="program-card__desc">{p.description}</p>
               </div>
             </li>
