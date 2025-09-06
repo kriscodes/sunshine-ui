@@ -3,7 +3,6 @@ import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider'
 import Footer from '../../components/Footer';
 import axios from 'axios';
-import styles from './styles.css'
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -66,7 +65,7 @@ function Lynwood() {
 
                   const formattedDate = `${month}/${day}/${year}`;
                     return (
-                      <div className={styles.eventsCard} key={index}>
+                      <div className="program-card" key={index}>
                           <div>
                               <p>{event?.name}</p>
                               <p>Lynwood</p>
