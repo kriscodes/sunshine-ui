@@ -1,5 +1,5 @@
 /* ---- Card ---- */
-.events-card {
+.eventsCard {
   display: flex;
   flex-direction: column;
   background: #fff;
