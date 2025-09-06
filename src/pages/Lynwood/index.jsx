@@ -68,7 +68,7 @@ function Lynwood() {
                         <div className="event-container" key={index}>
                             <div>
                                 <p>{event?.name}</p>
-                                <p>{event?.location}</p>
+                                <p>Lynwood</p>
                                 <p>{formattedDate}</p>
                                 <p>{event?.description}</p>
                             </div>
