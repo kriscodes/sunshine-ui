@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider'
-import EventList from '../../components/EventList';
 import Footer from '../../components/Footer';
 import axios from 'axios';
 
@@ -58,12 +57,19 @@ function Lynwood() {
             {events && 
             <div className="event-list-container">
                 {events.map((event, index) => {
+                  const dateObject = new Date(event?.date);
+
+                  const month = dateObject.getMonth() + 1; // getMonth() is 0-indexed
+                  const day = dateObject.getDate();
+                  const year = dateObject.getFullYear();
+
+                  const formattedDate = `${month}/${day}/${year}`;
                     return (
                         <div className="event-container" key={index}>
                             <div>
                                 <p>{event?.name}</p>
                                 <p>{event?.location}</p>
-                                <p>{event?.date}</p>
+                                <p>{formattedDate}</p>
                                 <p>{event?.description}</p>
                             </div>
                         </div>
