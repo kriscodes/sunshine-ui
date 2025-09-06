@@ -1,5 +1,5 @@
 /* Card shell — mirrors the events card */
-.program-card {
+.event-card {
   width: 100%;
   max-width: 300px;                     /* ~ the size we used for event cards */
   background: #fff;
@@ -8,15 +8,16 @@
   overflow: hidden;                      /* rounds the image corners too */
   box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.06);
   transition: transform .18s ease, box-shadow .18s ease;
+  padding: 32px;
 }
 
-.program-card:hover {
+.event-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
 }
 
 /* Uniform image: same visual height for all orientations */
-.program-card > img {
+.event-card > img {
   width: 100%;
   aspect-ratio: 4 / 3;                   /* pick 3/2 or 16/9 if you prefer */
   display: block;
@@ -28,7 +29,7 @@
 }
 
 /* Title + description spacing/typography like events card */
-.program-card > h3 {
+.event-card > h3 {
   margin: 12px 14px 6px;
   font-size: 18px;
   line-height: 1.25;
@@ -36,7 +37,7 @@
   color: #111827;
 }
 
-.program-card > p {
+.event-card > p {
   margin: 0 14px 14px;
   font-size: 14px;
   line-height: 1.5;
