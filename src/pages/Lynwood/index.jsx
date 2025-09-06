@@ -12,18 +12,25 @@ function Lynwood() {
   useEffect( () => {
         
     async function fetchEvents() {
+
+      console.log('inside fetch events hook');
+
       await axios.get('https://sunshine-api.onrender.com/events')
-    .then(res => {
-      const c = res.data;
-      console.log('res.data', res.data);
+      .then(res => {
+
+        const c = res.data;
+        console.log('res.data', res.data);
       
-      console.log('inside props.location if statement');
-      const filteredData = c.filter((item) => {
+        console.log('inside props.location if statement');
+
+        const filteredData = c.filter((item) => {
+
           console.log('inside filter for lynwood')
           return item.location.includes('lynwood')
-      })
-      console.log(filteredData);
-      setEvents(filteredData);
+        })
+        
+        console.log('filteredData', filteredData);
+        setEvents(filteredData);
       })
     };
     
