@@ -9,6 +9,7 @@ import ContactUs from '../../components/ContactUs';
 import TourForm from '../../components/TourForm';
 import Footer from '../../components/Footer';
 import YouTubeEmbed from '../../components/YouTubeEmbed'
+import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -25,7 +26,7 @@ const images = [
   '/compton/image6.jpeg',
   '/compton/image7.jpeg',
   '/compton/image8.jpg',
-  '/compton/image9.jpg',
+  '/compton/image9.jpg'
 ];
 
 function Home() {
@@ -37,6 +38,7 @@ function Home() {
         <Header/>
         <ImageSlider
           images={images}
+          videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
           interval={7000}
           fadeDuration={600}
           holdBlack={220}
