@@ -1,195 +1,486 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
-import 'react-calendar/dist/Calendar.css';
-import { ToastContainer, toast } from 'react-toastify';
-import './styles.css';
+import './index.css';
 
-const TourForm = () => {
+/**
+ * TourForm – single-step renderer (no horizontal slider; robust to global CSS)
+ *
+ * Payload:
+ *   parent_name, name (back-compat), email, phone, school (from location),
+ *   child_name, program, tour_date, tour_time
+ */
+export default function TourForm({
+  apiBase,
+  endpoint = '/tours',
+  onSubmitSuccess,
+  onSubmitError,
+  className = '',
+  initialValues = {},
+}) {
+  const env = typeof import.meta !== 'undefined' ? import.meta.env : process.env;
+  const API_BASE =
+    apiBase ||
+    env?.VITE_API_BASE_URL ||
+    env?.REACT_APP_API_BASE_URL ||
+    'https://sunshine-api.onrender.com';
 
-  const { handleSubmit, formState: { errors } } = useForm();
+  const PROGRAM_OPTIONS = [
+    'two-year-old program',
+    'three-year-old program',
+    'pre-k class',
+    'after-school program',
+  ];
 
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
+  // 15-min slots from 08:00 to 17:00 inclusive
+  const TIME_OPTIONS = useMemo(() => {
+    const opts = [];
+    const pad = (n) => String(n).padStart(2, '0');
+    const label = (h, m) => {
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      let hr = h % 12;
+      if (hr === 0) hr = 12;
+      return `${hr}:${pad(m)} ${ampm}`;
+    };
+    for (let h = 8; h <= 17; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        if (h === 17 && m > 0) break;
+        const value = `${pad(h)}:${pad(m)}`;
+        opts.push({ value, label: label(h, m) });
+      }
+    }
+    return opts;
+  }, []);
+
+  const [step, setStep] = useState(0);
+  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [errorMsg, setErrorMsg] = useState('');
+  const [hintMsg, setHintMsg] = useState('');
+
+  const [form, setForm] = useState(() => ({
+    name: '',
     email: '',
     phone: '',
+    location: 'lynwood', // payload key becomes "school"
     child_name: '',
-    childBirthday: '',
     program: '',
-    school: '',
-    tour_date: '',
-    tour_time: '09:30:00',
-  });
+    preferred_date: '',
+    preferred_time: '',
+    ...initialValues,
+  }));
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(name, value);
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const steps = useMemo(
+    () => [
+      { key: 'contact', title: 'Tell us about you', required: ['name', 'email'] },
+      { key: 'reach',   title: 'How can we reach you?', required: ['phone', 'location'] },
+      { key: 'child',   title: 'About your child', required: ['child_name', 'program'] },
+      { key: 'visit',   title: 'Preferred tour time', required: ['preferred_date', 'preferred_time'] },
+    ],
+    []
+  );
+
+  const totalSteps = steps.length;
+  const current = steps[step];
+
+  // Validation
+  const PROGRAM_SET = new Set(PROGRAM_OPTIONS);
+  const validators = {
+    name: (v) => (!!v && v.trim().length >= 2) || 'Please enter the parent name.',
+    email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && v.length <= 254) || 'Please enter a valid email.',
+    phone: (v) => {
+      const digits = (v || '').replace(/\D+/g, '');
+      return (digits.length >= 10 && digits.length <= 15) || 'Enter a valid phone number.';
+    },
+    location: (v) => (v === 'lynwood' || v === 'compton') || 'Choose a location.',
+    child_name: (v) => (!!v && v.trim().length >= 2) || 'Enter your child’s name.',
+    program: (v) => PROGRAM_SET.has(v) || 'Please select a program.',
+    preferred_date: (v) => !!v || 'Select a date.',
+    preferred_time: (v) => !!v || 'Select a time.',
   };
 
-  const handlePhoneChange = (e) => {
-    const { name, value } = e.target;
-    let number = value.replace(/\D/g,'');
-    setFormData({
-        ...formData,
-        [name]: number
-    });
+  const [touched, setTouched] = useState({});
+  const setField = useCallback((name, value) => setForm((f) => ({ ...f, [name]: value })), []);
+  const markTouched = useCallback((name) => setTouched((t) => ({ ...t, [name]: true })), []);
+
+  const validateField = useCallback(
+    (name) => {
+      const fn = validators[name];
+      if (!fn) return null;
+      const res = fn(form[name]);
+      return res === true ? null : res;
+    },
+    [form, validators]
+  );
+
+  const stepErrors = useMemo(() => {
+    const errs = {};
+    for (const name of current.required) {
+      const msg = validateField(name);
+      if (msg) errs[name] = msg;
+    }
+    return errs;
+  }, [current, validateField]);
+
+  const canNext = useMemo(() => Object.keys(stepErrors).length === 0, [stepErrors]);
+
+  // Safe autofocus on the first control per step
+  const firstFieldRef = useRef(null);
+  const canSetSelection = (el) => {
+    if (!el || typeof el.setSelectionRange !== 'function') return false;
+    const tag = el.tagName?.toUpperCase();
+    if (tag === 'TEXTAREA') return true;
+    if (tag !== 'INPUT') return false;
+    return new Set(['text', 'email', 'tel', 'search', 'url', 'password']).has(el.type);
+  };
+  useEffect(() => {
+    setHintMsg('');
+    const el = firstFieldRef.current;
+    if (el) {
+      try {
+        el.focus({ preventScroll: true });
+        if (canSetSelection(el)) {
+          const n = (el.value?.length ?? 0);
+          el.setSelectionRange(n, n);
+        }
+      } catch { /* ignore */ }
+    }
+  }, [step]);
+
+  const revealErrors = () => {
+    const touchedNames = Object.fromEntries(current.required.map((n) => [n, true]));
+    setTouched((t) => ({ ...t, ...touchedNames }));
+    setHintMsg('Please complete the highlighted fields to continue.');
   };
 
-  const handleTimeChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-        ...formData,
-        'tour_time': value
-      });
+  const handleNext = () => {
+    if (!canNext) return revealErrors();
+    setStep((s) => Math.min(s + 1, totalSteps - 1));
   };
 
-  const updateTours = async () => {
+  const handleBack = () => setStep((s) => Math.max(s - 1, 0));
+
+  const handleSubmit = async () => {
+    if (!canNext) return revealErrors();
     try {
-        await axios.post('https://sunshine-api.onrender.com/tours', formData);
-        const notify = () => toast.success("Success! Please check your email.", {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-          });
-          notify();
-      } catch (error) {
-        console.error('Error scheduling tour', error);
-      }
+      setStatus('submitting');
+      setErrorMsg('');
+      setHintMsg('');
+
+      const parentName = form.name.trim();
+      const payload = {
+        parent_name: parentName,
+        name: parentName,                  // back-compat (remove later if not needed)
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        school: form.location,             // location -> school
+        child_name: form.child_name.trim(),
+        program: form.program,
+        tour_date: form.preferred_date || null, // preferred_date -> tour_date
+        tour_time: form.preferred_time || null, // preferred_time -> tour_time
+        source: 'sunshine-ui',
+      };
+
+      const url = `${API_BASE.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`;
+      const res = await axios.post(url, payload, {
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        withCredentials: false,
+      });
+
+      setStatus('success');
+      onSubmitSuccess?.(payload, res);
+    } catch (err) {
+      console.error('TourForm submit failed:', err);
+      setStatus('error');
+      const apiMsg =
+        err?.response?.data?.error ||
+        err?.message ||
+        'Something went wrong. Please try again.';
+      setErrorMsg(apiMsg);
+      onSubmitError?.(err);
+    }
   };
 
-  const onSubmit = async(e) => {
-    updateTours();
+  // --- render current step only (no slider/track) ---
+  const renderStep = () => {
+    switch (current.key) {
+      case 'contact':
+        return (
+          <div className="tf-panel tf-fadeIn" aria-labelledby="tf-h-contact">
+            <div className="tf-panelInner">
+              <h3 id="tf-h-contact" className="tf-panelTitle">Tell us about you</h3>
+              <div className="tf-fields single">
+                <div className={`tf-field ${touched.name && validateField('name') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-name">Parent name</label>
+                  <input
+                    id="tf-name"
+                    ref={firstFieldRef}
+                    type="text"
+                    inputMode="text"
+                    name="name"
+                    placeholder="Jane Doe"
+                    value={form.name}
+                    onChange={(e) => setField('name', e.target.value)}
+                    onBlur={() => markTouched('name')}
+                    aria-invalid={!!(touched.name && validateField('name'))}
+                    aria-describedby="tf-name-err"
+                  />
+                  {touched.name && validateField('name') && (
+                    <div id="tf-name-err" className="tf-error">{validateField('name')}</div>
+                  )}
+                </div>
+
+                <div className={`tf-field ${touched.email && validateField('email') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-email">Email</label>
+                  <input
+                    id="tf-email"
+                    type="email"
+                    name="email"
+                    placeholder="jane@example.com"
+                    value={form.email}
+                    onChange={(e) => setField('email', e.target.value)}
+                    onBlur={() => markTouched('email')}
+                    aria-invalid={!!(touched.email && validateField('email'))}
+                    aria-describedby="tf-email-err"
+                  />
+                  {touched.email && validateField('email') && (
+                    <div id="tf-email-err" className="tf-error">{validateField('email')}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'reach':
+        return (
+          <div className="tf-panel tf-fadeIn" aria-labelledby="tf-h-reach">
+            <div className="tf-panelInner">
+              <h3 id="tf-h-reach" className="tf-panelTitle">How can we reach you?</h3>
+              <div className="tf-fields single">
+                <div className={`tf-field ${touched.phone && validateField('phone') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-phone">Phone</label>
+                  <input
+                    id="tf-phone"
+                    ref={firstFieldRef}
+                    type="tel"
+                    inputMode="tel"
+                    name="phone"
+                    placeholder="(555) 555‑5555"
+                    value={form.phone}
+                    onChange={(e) => setField('phone', e.target.value)}
+                    onBlur={() => markTouched('phone')}
+                    aria-invalid={!!(touched.phone && validateField('phone'))}
+                    aria-describedby="tf-phone-err"
+                  />
+                  {touched.phone && validateField('phone') && (
+                    <div id="tf-phone-err" className="tf-error">{validateField('phone')}</div>
+                  )}
+                </div>
+
+                <div className={`tf-field ${touched.location && validateField('location') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-location">Preferred location</label>
+                  <select
+                    id="tf-location"
+                    name="location"
+                    value={form.location}
+                    onChange={(e) => setField('location', e.target.value)}
+                    onBlur={() => markTouched('location')}
+                    aria-invalid={!!(touched.location && validateField('location'))}
+                    aria-describedby="tf-location-err"
+                  >
+                    <option value="lynwood">Lynwood</option>
+                    <option value="compton">Compton</option>
+                  </select>
+                  {touched.location && validateField('location') && (
+                    <div id="tf-location-err" className="tf-error">{validateField('location')}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'child':
+        return (
+          <div className="tf-panel tf-fadeIn" aria-labelledby="tf-h-child">
+            <div className="tf-panelInner">
+              <h3 id="tf-h-child" className="tf-panelTitle">About your child</h3>
+              <div className="tf-fields single">
+                <div className={`tf-field ${touched.child_name && validateField('child_name') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-child-name">Child’s name</label>
+                  <input
+                    id="tf-child-name"
+                    ref={firstFieldRef}
+                    type="text"
+                    name="child_name"
+                    placeholder="Alex"
+                    value={form.child_name}
+                    onChange={(e) => setField('child_name', e.target.value)}
+                    onBlur={() => markTouched('child_name')}
+                    aria-invalid={!!(touched.child_name && validateField('child_name'))}
+                    aria-describedby="tf-child-name-err"
+                  />
+                  {touched.child_name && validateField('child_name') && (
+                    <div id="tf-child-name-err" className="tf-error">{validateField('child_name')}</div>
+                  )}
+                </div>
+
+                <div className={`tf-field ${touched.program && validateField('program') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-program">Program</label>
+                  <select
+                    id="tf-program"
+                    name="program"
+                    value={form.program}
+                    onChange={(e) => setField('program', e.target.value)}
+                    onBlur={() => markTouched('program')}
+                    aria-invalid={!!(touched.program && validateField('program'))}
+                    aria-describedby="tf-program-err"
+                  >
+                    <option value="" disabled>Select a program</option>
+                    {PROGRAM_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  {touched.program && validateField('program') && (
+                    <div id="tf-program-err" className="tf-error">{validateField('program')}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'visit':
+      default:
+        return (
+          <div className="tf-panel tf-fadeIn" aria-labelledby="tf-h-visit">
+            <div className="tf-panelInner">
+              <h3 id="tf-h-visit" className="tf-panelTitle">Preferred tour time</h3>
+              <div className="tf-fields single">
+                <div className={`tf-field ${touched.preferred_date && validateField('preferred_date') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-date">Date</label>
+                  <input
+                    id="tf-date"
+                    ref={firstFieldRef}
+                    type="date"
+                    name="preferred_date"
+                    value={form.preferred_date}
+                    onChange={(e) => setField('preferred_date', e.target.value)}
+                    onBlur={() => markTouched('preferred_date')}
+                    aria-invalid={!!(touched.preferred_date && validateField('preferred_date'))}
+                    aria-describedby="tf-date-err"
+                  />
+                  {touched.preferred_date && validateField('preferred_date') && (
+                    <div id="tf-date-err" className="tf-error">{validateField('preferred_date')}</div>
+                  )}
+                </div>
+
+                <div className={`tf-field ${touched.preferred_time && validateField('preferred_time') ? 'is-error' : ''}`}>
+                  <label htmlFor="tf-time">Time</label>
+                  <select
+                    id="tf-time"
+                    name="preferred_time"
+                    value={form.preferred_time}
+                    onChange={(e) => setField('preferred_time', e.target.value)}
+                    onBlur={() => markTouched('preferred_time')}
+                    aria-invalid={!!(touched.preferred_time && validateField('preferred_time'))}
+                    aria-describedby="tf-time-err"
+                  >
+                    <option value="" disabled>Select a time</option>
+                    {TIME_OPTIONS.map((t) => (
+                      <option key={t.value} value={t.value}>{t.label}</option>
+                    ))}
+                  </select>
+                  {touched.preferred_time && validateField('preferred_time') && (
+                    <div id="tf-time-err" className="tf-error">{validateField('preferred_time')}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+    }
   };
+
+  if (status === 'success') {
+    return (
+      <section className={`tf ${className}`}>
+        <div className="tf-card tf-success">
+          <div className="tf-successIcon" aria-hidden>✓</div>
+          <h3>Thanks! We’ve received your tour request.</h3>
+          <p>
+            Our team will reach out to confirm your visit at the {form.location === 'compton' ? 'Compton' : 'Lynwood'} campus.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    
-    <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-            <h2 style={{ textAlign: 'center' }}>Schedule A Tour</h2>
-            <div className="form-container">
-                <div style={{ marginRight: "24px"}}>
-                    <div className="form-input-container">
-                        <label>First Name:</label>
-                        <input
-                            type="text"
-                            name="first_name"
-                            value={formData.first_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Child's Name:</label>
-                        <input
-                            type="text"
-                            name="child_name"
-                            value={formData.child_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Program:</label>
-                        <select
-                            name="program"
-                            value={formData.program}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Select...</option>
-                            <option value="TWO-YEAR-OLD PROGRAM">TWO-YEAR-OLD PROGRAM</option>
-                            <option value="THREE-YEAR-OLD PROGRAM">THREE-YEAR-OLD PROGRAM</option>
-                            <option value="AFTER-SCHOOL PROGRAM">AFTER-SCHOOL PROGRAM</option>
-                            <option value="PRE-K CLASS">PRE-K CLASS</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <div className="form-input-container">
-                        <label>Last Name:</label>
-                        <input
-                            type="text"
-                            name="last_name"
-                            value={formData.last_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Phone Number:</label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handlePhoneChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Tour Date</label>
-                        <input
-                            type="date"
-                            name="tour_date"
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-input-container">
-                        <label>Tour Time </label>
-                        <select name="date_time" id="date_time" onChange={handleTimeChange}>
-                            <option value="09:30 AM">9:30 AM</option>
-                            <option value="10:00 AM">10:00 AM</option>
-                            <option value="10:30 AM">10:30 AM</option>
-                            <option value="11:00 AM">11:00 AM</option>
-                            <option value="11:30 AM">11:30 AM</option>
-                            <option value="1:30 PM">1:30 PM</option>
-                            <option value="2:00 PM">2:00 PM</option>
-                            <option value="2:30 PM">2:30 PM</option>
-                            <option value="3:00 PM">3:00 PM</option>
-                            <option value="3:30 PM">3:30 PM</option>
-                            <option value="4:00 PM">4:00 PM</option>
-                        </select>
-                    </div>
-                    <div className="form-input-container">
-                        <label>Select School</label>
-                        <select
-                        name="school"
-                        onChange={handleChange}
-                        required
-                        >
-                        <option value="Compton">Compton</option>
-                        <option value="Lynwood">Lynwood</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '32px', position:'relative' }}>
-                <button type="submit" className='form-button'>Submit</button>
-            </div>
-      </div>
-      <ToastContainer />
-    </form>
-  );
-};
+    <section className={`tf ${className}`}>
+      <form
+        className="tf-card"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (step < totalSteps - 1) handleNext(); else handleSubmit();
+        }}
+        noValidate
+      >
+        {/* Header + PROGRESS BAR AT TOP */}
+        <header className="tf-header">
+          <div className="tf-title">
+            <h2>Book a Tour</h2>
+            <p className="tf-subtitle">Just a few quick questions—takes under a minute.</p>
+          </div>
+          <div className="tf-progress" aria-hidden>
+            <div className="tf-progressBar" style={{ width: `${((step + 1) / totalSteps) * 100}%` }} />
+          </div>
+        </header>
 
-export default TourForm;
+        {/* SINGLE STEP ONLY */}
+        <div className="tf-stage">
+          {renderStep()}
+        </div>
+
+        <footer className="tf-actions">
+          <button
+            type="button"
+            className="tf-btn tf-btn--ghost"
+            onClick={handleBack}
+            disabled={step === 0 || status === 'submitting'}
+          >
+            Back
+          </button>
+
+          {step < totalSteps - 1 ? (
+            <button
+              type="button"
+              className="tf-btn tf-btn--primary"
+              onClick={handleNext}
+              disabled={status === 'submitting'}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="tf-btn tf-btn--primary"
+              disabled={status === 'submitting'}
+            >
+              {status === 'submitting' ? 'Sending…' : 'Submit'}
+            </button>
+          )}
+        </footer>
+
+        {/* Hints & errors */}
+        {hintMsg && status !== 'error' && (
+          <div className="tf-hint" role="status">{hintMsg}</div>
+        )}
+        {status === 'error' && (
+          <div className="tf-errorBanner" role="alert">
+            {errorMsg || 'Something went wrong. Please try again.'}
+          </div>
+        )}
+      </form>
+    </section>
+  );
+}
