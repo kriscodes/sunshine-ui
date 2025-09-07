@@ -10,6 +10,7 @@ import TourForm from '../../components/TourForm';
 import Footer from '../../components/Footer';
 import YouTubeEmbed from '../../components/YouTubeEmbed'
 import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
+import FormsQuickLinks from '../../components/FormsQuickLinks';
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -51,9 +52,13 @@ function Home() {
         >
 
       </ImageSlider>
-        {/*<Submenu/>*/}
+        
         <div className="container">
             <MissionStatement/>
+            <FormsQuickLinks
+              englishHref="/forms/enrollment-english.pdf"
+              spanishHref="/forms/enrollment-spanish.pdf"
+            />
             <TextTestimonial/>
             <YouTubeEmbed
               url="https://youtube.com/shorts/ypzhv0q1byI"
