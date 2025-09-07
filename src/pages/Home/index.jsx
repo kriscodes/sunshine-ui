@@ -45,6 +45,9 @@ function Home() {
           holdBlack={220}
           height="clamp(420px, 68vh, 900px)"
           contentAlign="left"
+          minHeight="70vh"
+          debug
+          startAtIndex={999}
         >
 
       </ImageSlider>
