@@ -33,6 +33,7 @@ function Home() {
   let n = Math.random() * 2;
   let l = n > 1 ? 'c' : 'l';
   console.log(n);
+  console.log(sunshineVideo)
   return (
     <div>
         <Header/>

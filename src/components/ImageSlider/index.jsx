@@ -1,66 +1,98 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
- * ImageSlider with optional last-slide video.
+ * ImageSlider – robust image rotator with optional last-slide video.
  *
  * Props:
- *  - images: string[]                // image URLs (existing behavior)
- *  - videoSrc?: string               // optional; appends as the LAST slide (e.g., "/sunshine-web.mp4")
- *  - intervalMs?: number             // image display time (default 6000ms)
- *  - fadeMs?: number                 // fade duration between slides (default 450ms)
+ *  - images: (string | { src: string, alt?: string })[]
+ *  - videoSrc?: string            // optional; when loaded, appended as the LAST slide
+ *  - intervalMs?: number          // image dwell time (default 6000ms)
+ *  - fadeMs?: number              // crossfade duration (default 450ms)
+ *  - minHeight?: string|number    // fallback height; default '60vh'
  *  - className?: string
  *
- * Usage:
- *   <ImageSlider
- *     images={['/hero1.jpg','/hero2.jpg','/hero3.jpg']}
- *     videoSrc="/sunshine-web.mp4"
- *   />
- *
- * Notes:
- *  - If the last item in `images` is an .mp4, it will be treated as the video and moved to the end,
- *    so you can also just include it in your images array.
- *  - Video autoplays muted (browser policy) and jumps back to the first slide on end.
+ * Behavior:
+ *  - Cycles images on a timer.
+ *  - If a video is provided, it’s preloaded as a Blob; once ready, it becomes the last slide.
+ *  - When the video slide becomes active: autoplay (muted, inline). On end: jump to the first image.
+ *  - If the video fails to load, it’s never added; images keep rotating normally.
  */
 export default function ImageSlider({
   images = [],
-  videoSrc,                 // optional, e.g. '/sunshine-web.mp4'
+  videoSrc,
   intervalMs = 6000,
   fadeMs = 450,
+  minHeight = '60vh',
   className = '',
 }) {
-  // Normalize slides: all images first, OPTIONAL video last.
-  const slides = useMemo(() => {
-    const imgSlides = [];
-    let foundVideo = null;
-
-    // Accept strings; treat ".mp4" as video if present in images
-    for (const src of images) {
-      if (typeof src === 'string' && /\.mp4(\?.*)?$/i.test(src)) {
-        // If someone accidentally placed the mp4 among images, capture it
-        foundVideo = { type: 'video', src };
-      } else if (typeof src === 'string') {
-        imgSlides.push({ type: 'image', src });
-      } else if (src && typeof src === 'object' && src.src) {
-        if (src.type === 'video') foundVideo = { type: 'video', src: src.src };
-        else imgSlides.push({ type: 'image', src: src.src });
+  // --- normalize incoming images (allow strings or {src, alt}) ---
+  const imageSlides = useMemo(() => {
+    const out = [];
+    for (const item of images) {
+      if (!item) continue;
+      if (typeof item === 'string') {
+        const s = item.trim();
+        if (!s || /\.mp4(\?.*)?$/i.test(s)) continue; // ignore accidental mp4s in images list
+        out.push({ type: 'image', src: s, alt: '' });
+      } else if (typeof item === 'object') {
+        const s = String(item.src || item.url || '').trim();
+        if (!s || /\.mp4(\?.*)?$/i.test(s)) continue;
+        out.push({ type: 'image', src: s, alt: item.alt || '' });
       }
     }
-
-    // Explicit prop wins
-    if (typeof videoSrc === 'string' && videoSrc.trim()) {
-      foundVideo = { type: 'video', src: videoSrc.trim() };
-    }
-
-    return foundVideo ? [...imgSlides, foundVideo] : imgSlides;
-  }, [images, videoSrc]);
-
-  const hasVideo = slides.some(s => s.type === 'video');
-  const videoIndex = hasVideo ? slides.findIndex(s => s.type === 'video') : -1;
+    return out;
+  }, [images]);
 
   const [index, setIndex] = useState(0);
   const [fading, setFading] = useState(false);
   const timerRef = useRef(null);
-  const videoRef = useRef(null);
+
+  // --- video preload state (Blob URL avoids dev-server Range issues) ---
+  const videoEl = useRef(null);
+  const [videoUrl, setVideoUrl] = useState(null);   // blob: URL once loaded
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoTried, setVideoTried] = useState(false);
+
+  // Preload video as a Blob right after mount or when videoSrc changes
+  useEffect(() => {
+    let aborted = false;
+    let objectUrl = null;
+
+    async function load() {
+      if (!videoSrc || videoReady || videoTried) return;
+      setVideoTried(true);
+      try {
+        const resp = await fetch(videoSrc);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const blob = await resp.blob();
+        if (aborted) return;
+        objectUrl = URL.createObjectURL(blob);
+        setVideoUrl(objectUrl);
+        setVideoReady(true);
+      } catch {
+        // Ignore failure: we’ll just never add a video slide
+        setVideoReady(false);
+        setVideoUrl(null);
+      }
+    }
+
+    load();
+    return () => {
+      aborted = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [videoSrc, videoReady, videoTried]);
+
+  // Build final slides: all images + (optional) video last (only when ready)
+  const slides = useMemo(() => {
+    return videoReady && videoUrl
+      ? [...imageSlides, { type: 'video', src: videoUrl }]
+      : imageSlides;
+  }, [imageSlides, videoReady, videoUrl]);
+
+  const hasSlides = slides.length > 0;
+  const hasVideo = slides.length > 0 && slides[slides.length - 1].type === 'video';
+  const videoIndex = hasVideo ? slides.length - 1 : -1;
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -70,61 +102,94 @@ export default function ImageSlider({
   }, []);
 
   const goToNext = useCallback(() => {
+    if (!slides.length) return;
     setFading(true);
-    // Fade to black, then swap
     setTimeout(() => {
-      setIndex(prev => (prev + 1) % slides.length);
+      setIndex((prev) => (prev + 1) % slides.length);
       setFading(false);
     }, fadeMs);
   }, [slides.length, fadeMs]);
 
-  // Auto-advance logic:
-  // - On image slides: wait intervalMs -> fade -> next
-  // - On video slide: pause timer, autoplay video; on end -> jump to first slide (index 0)
-  useEffect(() => {
-    clearTimer();
-
-    if (!slides.length) return;
-
-    const current = slides[index];
-
-    if (current.type === 'video') {
-      // No timer while video plays
-      const v = videoRef.current;
-      if (v) {
-        try {
-          v.currentTime = 0;
-          // autoplay policies require muted + playsInline (set on element)
-          const p = v.play();
-          if (p && typeof p.catch === 'function') p.catch(() => {});
-        } catch {}
-      }
-      return () => {};
-    }
-
-    // Image slide: schedule next
-    timerRef.current = setTimeout(goToNext, intervalMs);
-    return clearTimer;
-  }, [index, slides, intervalMs, goToNext, clearTimer]);
-
-  // Cleanup
-  useEffect(() => clearTimer, [clearTimer]);
-
-  const handleVideoEnded = () => {
-    // When the video ends, jump back to FIRST image.
+  const goToFirst = useCallback(() => {
     setFading(true);
     setTimeout(() => {
       setIndex(0);
       setFading(false);
-    }, Math.min(180, fadeMs)); // quick fade so it feels snappy
+    }, Math.min(180, fadeMs));
+  }, [fadeMs]);
+
+  // Auto-advance images on a timer (video controls its own timing)
+  useEffect(() => {
+    clearTimer();
+    if (!hasSlides) return;
+
+    const current = slides[index];
+    if (current.type === 'video') return; // no timer on video
+
+    timerRef.current = setTimeout(goToNext, intervalMs);
+    return clearTimer;
+  }, [index, slides, hasSlides, intervalMs, goToNext, clearTimer]);
+
+  // When we enter the video slide, start playback as soon as possible
+  useEffect(() => {
+    if (!hasVideo || index !== videoIndex) return;
+    const v = videoEl.current;
+    if (!v) return;
+
+    // Ensure the correct source is set (blob URL)
+    v.src = slides[videoIndex].src;
+    v.currentTime = 0;
+
+    const tryPlay = () => {
+      const p = v.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          // Autoplay might be blocked on some browsers; leave it paused but visible.
+          // (Muted + playsInline should normally pass policy.)
+        });
+      }
+    };
+
+    // If can play already, try; otherwise wait for the event.
+    if (v.readyState >= 2) tryPlay();
+    else {
+      const onCanPlay = () => {
+        v.removeEventListener('canplay', onCanPlay);
+        tryPlay();
+      };
+      v.addEventListener('canplay', onCanPlay);
+      return () => v.removeEventListener('canplay', onCanPlay);
+    }
+  }, [hasVideo, index, videoIndex, slides]);
+
+  // On video end, return to the first image
+  const handleVideoEnded = () => {
+    if (imageSlides.length) goToFirst();
+    else {
+      // If there are no images at all, loop the video
+      const v = videoEl.current;
+      if (v) {
+        try { v.currentTime = 0; v.play(); } catch {}
+      }
+    }
   };
 
-  // Small helper: is this slide active?
-  const isActive = i => i === index;
+  if (!hasSlides) {
+    return (
+      <div
+        className={`image-slider ${className}`}
+        style={{ position: 'relative', overflow: 'hidden', width: '100%', minHeight }}
+      />
+    );
+  }
+
+  const isActive = (i) => i === index;
 
   return (
-    <div className={`image-slider ${className}`} style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Slides stacked; active gets opacity 1 */}
+    <div
+      className={`image-slider ${className}`}
+      style={{ position: 'relative', overflow: 'hidden', width: '100%', minHeight }}
+    >
       {slides.map((s, i) => {
         const active = isActive(i);
         const baseStyle = {
@@ -136,21 +201,25 @@ export default function ImageSlider({
           opacity: active ? 1 : 0,
           transition: `opacity ${fadeMs}ms ease`,
           pointerEvents: active ? 'auto' : 'none',
+          backgroundColor: '#000',
         };
 
         if (s.type === 'video') {
           return (
             <video
               key={`slide-video-${i}`}
-              ref={i === videoIndex ? videoRef : null}
+              ref={videoEl}
               className="image-slider__media image-slider__media--video"
               style={baseStyle}
-              src={s.src}
               muted
               playsInline
-              preload="metadata"
-              // no controls; pure hero playback
+              autoPlay           // help autoplay policies (with muted)
+              preload="auto"
               onEnded={handleVideoEnded}
+              onError={() => {
+                // If something goes wrong at runtime, just fall back to images
+                setTimeout(goToFirst, Math.min(300, fadeMs));
+              }}
             />
           );
         }
@@ -161,14 +230,17 @@ export default function ImageSlider({
             className="image-slider__media image-slider__media--image"
             style={baseStyle}
             src={s.src}
-            alt=""
+            alt={s.alt || ''}
             loading={i === 0 ? 'eager' : 'lazy'}
             decoding="async"
+            onError={() => {
+              if (active) setTimeout(goToNext, Math.min(300, fadeMs));
+            }}
           />
         );
       })}
 
-      {/* Fade-to-black overlay when transitioning images (kept very light) */}
+      {/* Fade-to-black overlay during transitions */}
       <div
         aria-hidden
         style={{
