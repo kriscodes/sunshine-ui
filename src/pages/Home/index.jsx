@@ -1,16 +1,15 @@
-import React from 'react';
 import './styles.css';
 import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider';
-import Submenu from '../../components/Subheader';
 import MissionStatement from '../../components/MissionStatement';
 import { TextTestimonial, VideoTestimonial } from '../../components/Testimonials';
-import ContactUs from '../../components/ContactUs';
 import TourForm from '../../components/TourForm';
 import Footer from '../../components/Footer';
 import YouTubeEmbed from '../../components/YouTubeEmbed'
 import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
 import FormsQuickLinks from '../../components/FormsQuickLinks';
+import formEN from '../../assets/enrollment_english.pdf';
+import formES from '../../assets/enrollment_spanish.pdf';
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -56,8 +55,8 @@ function Home() {
         <div className="container">
             <MissionStatement/>
             <FormsQuickLinks
-              englishHref="/forms/enrollment-english.pdf"
-              spanishHref="/forms/enrollment-spanish.pdf"
+              englishHref={formEN}
+              spanishHref={formES}
             />
             <TextTestimonial/>
             <YouTubeEmbed
