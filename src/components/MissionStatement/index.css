@@ -1,140 +1,102 @@
-/* Scope + predictable sizing */
+/* Mobile-first, full-bleed, iOS-safe MissionStatement */
 .mission, .mission * { box-sizing: border-box; }
 
+/* FULL-BLEED: escape any narrow parent wrapper */
 .mission {
-  --max-w: 1400px;               /* aligns with Header/Footer width */
-  --pad-x: clamp(16px, 3vw, 28px);
-  --pad-y: clamp(20px, 4vw, 48px);
-  --card-pad: clamp(16px, 2.4vw, 28px);
+  --max-w: 1200px;
+  --pad-x: clamp(16px, 4vw, 28px);
+  --pad-y: clamp(20px, 6vw, 56px);
+  --card-pad: clamp(16px, 3.2vw, 28px);
 
-  /* Palette echoes your header/footer warm sunrise */
   --text: #0f172a;
   --muted: #475569;
-  --accent: #f59e0b;             /* amber */
-  --accent-2: #fb923c;           /* warm orange */
-  --surface: #ffffff;
+  --accent: #f59e0b;
+  --accent-2: #fb923c;
+  --surface: #fff;
 
   position: relative;
+  z-index: 0;
   color: var(--text);
-  padding: var(--pad-y) var(--pad-x);
-  isolation: isolate;
+  -webkit-text-size-adjust: 100%;
+
+  /* full-bleed breakout */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* safe-area padding */
+  padding: var(--pad-y) max(var(--pad-x), env(safe-area-inset-left))
+           var(--pad-y) max(var(--pad-x), env(safe-area-inset-right));
+  overflow-x: hidden; /* avoid stray 1px scrollbars on iOS */
 }
 
-/* Subtle background glow */
+/* subtle warm background */
 .mission__bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(900px 360px at 100% -10%, rgba(251, 146, 60, .18), transparent 60%),
-    linear-gradient(180deg, rgba(255, 231, 194, .25), rgba(255, 209, 168, .15) 55%, rgba(255, 247, 204, .2));
-  z-index: 0;
+    radial-gradient(700px 300px at 100% -10%, rgba(251,146,60,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,231,194,.16), rgba(255,209,168,.12) 55%, rgba(255,247,204,.14));
+  z-index: -1;
 }
 
-/* Card container */
+/* INNER WRAP: center + max width */
 .mission__inner {
-  position: relative;
-  z-index: 1;
   background: var(--surface);
   border: 1px solid rgba(15,23,42,.08);
   border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 12px 28px rgba(0,0,0,.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 10px 24px rgba(0,0,0,.08);
   margin: 0 auto;
   max-width: var(--max-w);
   padding: var(--card-pad);
+
   display: grid;
-  gap: clamp(14px, 2vw, 24px);
+  gap: clamp(12px, 3vw, 24px);
+  min-width: 0; /* prevent overflow in Safari */
 }
 
-/* Split layout on larger screens if an image is provided */
-.mission__inner--split {
-  grid-template-columns: 1fr; /* mobile first */
-}
-@media (min-width: 900px) {
-  .mission__inner--split {
-    grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
-  }
+/* Split layout only when there is room */
+.mission__inner--split { grid-template-columns: 1fr; }
+@media (min-width: 960px) {
+  .mission__inner--split { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
   .mission__inner--left { direction: rtl; }
-  .mission__inner--left > * { direction: ltr; } /* keep text left-to-right */
-  /* right is default order; no special rule needed */
+  .mission__inner--left > * { direction: ltr; }
 }
 
-/* Copy block */
-.mission__copy {
-  display: grid;
-  gap: clamp(8px, 1.4vw, 14px);
-}
-
+/* COPY */
+.mission__copy { display: grid; gap: clamp(8px, 2.4vw, 14px); min-width: 0; }
 .mission__title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  font-weight: 800;
-  letter-spacing: .2px;
-  font-size: clamp(20px, 2.6vw, 30px);
-  color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+  margin: 0; font-weight: 800; letter-spacing: .2px;
+  font-size: clamp(20px, 5.2vw, 30px); color: var(--text);
 }
-
-/* Accent bar to the left of the heading */
 .mission__accent {
-  width: clamp(6px, 0.5vw, 8px);
-  height: 1.2em;
-  border-radius: 999px;
+  width: clamp(6px, 1vw, 8px); height: 1.2em; border-radius: 999px;
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
   flex: 0 0 auto;
 }
-
-/* Body text */
-.mission__text {
-  display: grid;
-  gap: 10px;
-}
+.mission__text { display: grid; gap: 8px; }
 .mission__text p {
-  margin: 0;
-  font-size: clamp(14px, 1.25vw, 16px);
-  line-height: 1.6;
-  color: var(--text);
+  margin: 0; font-size: clamp(14px, 4vw, 16px); line-height: 1.6;
+  color: var(--text); overflow-wrap: anywhere;
 }
-.mission__text p + p { margin-top: 6px; }
 
-/* Highlight pills (optional) */
+/* optional highlight pills */
 .mission__highlights {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
+  display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none;
 }
 .mission__pill {
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 12px;
+  padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 12px;
   color: #111827;
-  background:
-    linear-gradient(180deg, rgba(254, 243, 199, 0.9), rgba(255, 237, 213, 0.9));
+  background: linear-gradient(180deg, rgba(254,243,199,.92), rgba(255,237,213,.92));
   border: 1px solid rgba(15,23,42,.08);
 }
 
-/* Media block */
-.mission__media {
-  width: 100%;
-  display: grid;
-}
+/* MEDIA */
+.mission__media { width: 100%; display: grid; min-width: 0; }
 .mission__img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: 14px;
-  border: 1px solid rgba(15,23,42,.08);
-  box-shadow: 0 10px 24px rgba(0,0,0,.10);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .mission__img { transition: none; }
+  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: 14px; border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,.10);
 }

@@ -1,192 +1,224 @@
-/* Predictable sizing; prevents overflow surprises */
-.tf, .tf * { box-sizing: border-box; }
+/* TourForm – mobile-first, full-bleed, iOS-friendly */
+.tourForm, .tourForm * { box-sizing: border-box; }
 
-/* Spacing token */
-.tf { --tf-pad: clamp(16px, 3vw, 28px); }
+/* FULL-BLEED WRAPPER to avoid narrow parent constraints */
+.tourForm {
+  --max-w: 860px;
+  --pad-x: clamp(14px, 4vw, 28px);
+  --pad-y: clamp(16px, 6vw, 40px);
 
-/* Root layout */
-.tf {
-  display: grid;
-  place-items: center;
-  padding: clamp(12px, 3vw, 32px);
+  --text: #0f172a;       /* slate-900 */
+  --muted: #475569;      /* slate-600 */
+  --border: #e5e7eb;     /* slate-200 */
+  --focus: #2563eb;      /* blue-600 */
+  --bg: #ffffff;
+
+  /* Break out of any narrow wrapper and add safe-area padding */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: var(--pad-y) max(var(--pad-x), env(safe-area-inset-left))
+           var(--pad-y) max(var(--pad-x), env(safe-area-inset-right));
+
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden; /* avoids 1px horizontal scroll on iOS */
 }
 
-/* Card shell */
-.tf-card {
-  display: block;
-  width: min(100%, 720px);
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 10px 24px rgba(0,0,0,.10);
-  overflow: hidden;
-  position: relative;
+/* Card container that centers the form and caps width */
+.tourForm__card,
+.tourForm .tf__card,          /* fallback for existing markup */
+.tourForm .formCard {
+  width: min(100%, var(--max-w));
+  margin: 0 auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 10px 24px rgba(0,0,0,.08);
+  padding: clamp(16px, 3.2vw, 28px);
 }
 
-/* Header + PROGRESS BAR AT TOP */
-.tf-header {
-  padding: var(--tf-pad) var(--tf-pad) 12px;
-  border-bottom: 1px solid #f0f2f5;
-}
-
-.tf-title h2 {
-  margin: 0 0 4px;
-  font-size: clamp(22px, 2.6vw, 28px);
-  line-height: 1.2;
-  color: #111827;
-}
-
-.tf-subtitle {
-  margin: 0 0 10px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-/* Progress (no dots) */
-.tf-progress {
-  position: relative;
+/* Progress bar at the top (kept from your earlier design) */
+.tourForm__progress,
+.tourForm .tf__progress {
+  width: 100%;
   height: 6px;
-  background: #f3f4f6;
+  background: #f3f4f6; /* slate-100 */
   border-radius: 999px;
   overflow: hidden;
+  margin-bottom: clamp(12px, 3vw, 18px);
 }
-.tf-progressBar {
+.tourForm__progressFill,
+.tourForm .tf__progressFill {
   height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #2563eb, #7c3aed);
-  border-radius: inherit;
-  transition: width 300ms ease-in-out;
+  width: 0%; /* set by inline style in your component */
+  background: linear-gradient(90deg, #60a5fa, #2563eb);
+  border-radius: 999px;
+  transition: width 220ms ease;
 }
 
-/* Stage: contains only the active step */
-.tf-stage {
-  /* reserve some space to prevent footer jump on short steps */
-  min-height: 260px;
+/* Section / step heading */
+.tourForm__title,
+.tourForm .tf__title {
+  margin: 0 0 8px;
+  font-weight: 800;
+  font-size: clamp(18px, 5vw, 22px);
+  letter-spacing: .2px;
+  color: var(--text);
 }
 
-/* Panel */
-.tf-panel { width: 100%; }
-.tf-panelInner { padding: var(--tf-pad); padding-top: 12px; }
-.tf-panelTitle { margin: 0 0 14px; font-size: clamp(18px, 2.4vw, 22px); color: #111827; }
-
-/* Fade-in animation on step change */
-@keyframes tfFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: none; }
+/* Fields stack with good spacing */
+.tourForm__fields,
+.tourForm .tf__fields,
+.tourForm form {
+  display: grid;
+  gap: 12px;
 }
-.tf-fadeIn { animation: tfFadeIn 220ms ease; }
 
-/* Fields – stacked */
-.tf-fields {
+/* Two-up rows only when there is room */
+.tourForm__row--2,
+.tourForm .tf__row--2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 12px;
 }
-.tf-fields.single { grid-template-columns: 1fr; }
+@media (min-width: 700px) {
+  .tourForm__row--2,
+  .tourForm .tf__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
-.tf-field { display: grid; gap: 8px; }
-.tf-field label { font-size: 13px; color: #374151; }
+/* Labels */
+.tourForm label,
+.tourForm .tf__label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  margin: 2px 0 6px;
+}
 
-.tf-field input,
-.tf-field select,
-.tf-field textarea {
-  font: inherit;
-  padding: 12px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  outline: none;
-  background: #fff;
-  color: #111827;
+/* Inputs/selects/textarea – unified look, iOS-friendly tap targets */
+.tourForm input[type="text"],
+.tourForm input[type="email"],
+.tourForm input[type="tel"],
+.tourForm input[type="date"],
+.tourForm select,
+.tourForm textarea,
+.tourForm .tf__input,
+.tourForm .tf__select,
+.tourForm .tf__textarea {
   width: 100%;
-  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+  min-height: 48px;         /* usable tap size */
+  padding: 12px 14px;
+  font-size: 16px;          /* prevent iOS zoom on focus */
+  line-height: 1.4;
+
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
-/* **Neutralize global :invalid / aria-invalid styles** */
-.tf :where(input,select,textarea):invalid {
-  border-color: #d1d5db !important;
-  box-shadow: none !important;
-}
-.tf :where([aria-invalid="true"]) {
-  /* do not force red just for aria-invalid; our .is-error controls it */
+/* Focus ring */
+.tourForm input:focus,
+.tourForm select:focus,
+.tourForm textarea:focus,
+.tourForm .tf__input:focus,
+.tourForm .tf__select:focus,
+.tourForm .tf__textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .2);
 }
 
-/* Improved select arrow spacing */
-.tf-field select {
+/* Textarea height */
+.tourForm textarea,
+.tourForm .tf__textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Select: add padding for the arrow; keep arrow away from the edge */
+.tourForm select,
+.tourForm .tf__select {
   -webkit-appearance: none;
   appearance: none;
-  background-color: #fff;
-  padding-right: 44px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  padding-right: 38px;       /* room for arrow */
+  background-image:
+    linear-gradient(transparent, transparent),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 16px 16px;
-}
-select::-ms-expand { display: none; }
-
-/* Focus */
-.tf-field input:focus,
-.tf-field select:focus,
-.tf-field textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  background-position: right 12px center, 0 0;
+  background-size: 16px, 100% 100%;
 }
 
-/* Error states (our explicit class) */
-.tf-field.is-error input,
-.tf-field.is-error select,
-.tf-field.is-error textarea {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.10);
-}
-.tf-error { font-size: 12px; color: #b91c1c; }
-
-/* Actions */
-.tf-actions {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px var(--tf-pad) var(--tf-pad);
-  border-top: 1px solid #f0f2f5;
-  background: #fff;
+/* Helper / error text (if your component shows it) */
+.tourForm .tf__help { color: var(--muted); font-size: 13px; margin-top: 6px; }
+.tourForm .tf__error {
+  color: #b91c1c; /* red-700 */
+  font-size: 13px;
+  margin-top: 6px;
 }
 
-.tf-btn {
-  appearance: none;
-  border: 0;
-  border-radius: 10px;
+/* Actions: buttons stack on mobile, sit side-by-side on larger screens */
+.tourForm__actions,
+.tourForm .tf__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 560px) {
+  .tourForm__actions,
+  .tourForm .tf__actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Buttons */
+.tourForm button,
+.tourForm .tf__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 48px;
   padding: 10px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
-}
-.tf-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.tf-btn--ghost { background: #fff; color: #374151; border: 1px solid #e5e7eb; }
-.tf-btn--ghost:hover:not(:disabled) { background: #f9fafb; }
-
-.tf-btn--primary { background: #2563eb; color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.24); }
-.tf-btn--primary:hover:not(:disabled) { background: #1d4ed8; }
-
-/* Hint & error banners */
-.tf-hint { margin: 6px var(--tf-pad) var(--tf-pad); color: #6b7280; font-size: 13px; }
-.tf-errorBanner {
-  margin: 0 var(--tf-pad) var(--tf-pad);
-  background: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fee2e2;
   border-radius: 10px;
-  padding: 10px 12px;
-}
+  border: 1px solid transparent;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
 
-/* Success */
-.tf-success { text-align: center; padding: clamp(24px, 6vw, 48px); }
-.tf-successIcon {
-  width: 56px; height: 56px; border-radius: 999px;
-  background: #10b981; color: #fff; display: grid; place-items: center;
-  font-size: 28px; margin: 0 auto 12px;
-  box-shadow: 0 10px 24px rgba(16,185,129,.25);
+  color: #fff;
+  background: #2563eb;            /* primary */
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .18);
+  transition: background-color 140ms ease, transform 80ms ease, box-shadow 140ms ease;
 }
-.tf-success h3 { margin: 8px 0 6px; font-size: clamp(20px, 2.6vw, 26px); color: #064e3b; }
-.tf-success p { margin: 0; color: #065f46; }
+.tourForm button:hover,
+.tourForm .tf__btn:hover { background: #1d4ed8; }
+.tourForm button:active,
+.tourForm .tf__btn:active { transform: translateY(1px); }
+
+/* Secondary/ghost button style (if you have a Back button) */
+.tourForm .tf__btn--ghost {
+  background: #fff;
+  color: #374151;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+.tourForm .tf__btn--ghost:hover { background: #f9fafb; }
+
+/* Keep any sliding track from peeking outside */
+.tourForm__viewport,
+.tourForm .tf__viewport { overflow: hidden; width: 100%; }
+.tourForm__track,
+.tourForm .tf__track { min-width: 100%; }
+
+/* Reduce motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tourForm__progressFill { transition: none; }
+  .tourForm input, .tourForm select, .tourForm textarea { transition: none; }
+  .tourForm button, .tourForm .tf__btn { transition: none; }
+}
