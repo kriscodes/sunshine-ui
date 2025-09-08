@@ -416,7 +416,7 @@ export default function TourForm({
   }
 
   return (
-    <section className="tourForm">
+    <section className={`tf ${className}`}>
       <form
         className="tf-card"
         onSubmit={(e) => {
