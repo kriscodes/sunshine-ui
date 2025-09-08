@@ -1,0 +1,171 @@
+/* Scope + predictable sizing */
+.siteFooter, .siteFooter * { box-sizing: border-box; }
+
+.siteFooter {
+  --footer-max-w: 1400px;     /* match header width */
+  --pad-x: clamp(16px, 3vw, 28px);
+  --pad-y: clamp(18px, 3vw, 28px);
+
+  --text: #0f172a;
+  --muted: #475569;
+  --link: #0f172a;
+  --link-hover: #0b1324;
+
+  /* warm sunrise gradient to echo header */
+  --bg-1: #ffe7c2;
+  --bg-2: #ffd1a8;
+  --bg-3: #fff7cc;
+
+  position: relative;
+  isolation: isolate;
+  color: var(--text);
+}
+
+/* gradient layer */
+.siteFooter__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 360px at 0% 0%, rgba(255,213,153,.5), transparent 60%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+  opacity: 1;
+  z-index: 0;
+}
+
+/* content container */
+.siteFooter__inner {
+  position: relative;
+  z-index: 1;
+  padding: var(--pad-y) var(--pad-x);
+  margin-inline: auto;
+  max-width: var(--footer-max-w);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+
+/* Row 1: Logo */
+.siteFooter__brandLink { text-decoration: none; display: inline-block; }
+.siteFooter__logo {
+  height: clamp(40px, 6vw, 72px);
+  width: auto;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));
+}
+
+/* Row 2: Socials (centered) */
+.siteFooter__socialList {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.siteFooter__socialItem { display: inline-flex; }
+.siteFooter__socialLink {
+  display: inline-flex;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 6px 16px rgba(0,0,0,.10);
+  align-items: center; justify-content: center;
+  transition: transform 80ms ease, background-color 140ms ease;
+}
+.siteFooter__socialLink:hover { background: #fff; transform: translateY(-1px); }
+.siteFooter__socialIcon { width: 22px; height: 22px; object-fit: contain; display: block; }
+
+/* Row 3: Campuses (stack on mobile, 2 cols on tablet+) */
+.siteFooter__campuses {
+  width: 100%;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .siteFooter__campuses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.siteFooter__campus {
+  background: rgba(255,255,255,.6);
+  border: 1px dashed rgba(15,23,42,.12);
+  border-radius: 12px;
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+}
+
+/* Preserve your original classes and styling hooks */
+.footer-title {
+  font-weight: 800;
+  color: var(--text);
+  font-size: 15px;
+}
+.footer-address {
+  color: var(--muted);
+  font-style: normal; /* <address> default is italic; keep it normal */
+  line-height: 1.4;
+  font-size: 14px;
+}
+.footer-phone {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 700;
+}
+.footer-phone:hover { text-decoration: underline; }
+
+/* Legal bar */
+.siteFooter__legal {
+  position: relative;
+  z-index: 1;
+  padding: 10px var(--pad-x) 16px;
+  margin-top: 2px;
+}
+.siteFooter__legalInner {
+  max-width: var(--footer-max-w);
+  margin-inline: auto;
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .siteFooter__legalInner { grid-template-columns: auto 1fr; }
+}
+
+.siteFooter__legalLinks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (min-width: 720px) {
+  .siteFooter__legalLinks { justify-content: flex-start; }
+}
+
+.siteFooter__legalLink {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.siteFooter__legalLink:hover { background: rgba(255,255,255,.5); color: var(--link-hover); }
+
+.siteFooter__dot { color: var(--muted); }
+
+.siteFooter__copy {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+@media (min-width: 720px) {
+  .siteFooter__copy { text-align: right; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .siteFooter__socialLink { transition: none; }
+  .siteFooter__legalLink { transition: none; }
+}
