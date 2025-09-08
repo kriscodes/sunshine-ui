@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider'
 import Footer from '../../components/Footer';
 import axios from 'axios';
-import './styles.css';
+import './index.css';
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -35,7 +35,7 @@ function Lynwood() {
   }, [])
 
   return (
-    <div>
+    <main className="lynwood">
       <Header/>
       <ImageSlider
         images={images}
@@ -49,16 +49,26 @@ function Lynwood() {
         startAtIndex={999}
       >
       </ImageSlider>
-      <div style={{ margin: '64px 0' }}>
-        <div style={{ display: 'flex', justifyContent: "center", fontSize: '48px', fontWeight: 'bold' }}>
-          Lynwood
+      <section className="lynwood__hero" aria-labelledby="lynwood-title">
+        <div className="lynwood__heroInner">
+          <h1 id="lynwood-title" className="lynwood__title">Lynwood Campus</h1>
+          <p className="lynwood__subtitle">Upcoming events</p>
         </div>
-        <div style={{display: 'flex', justifyContent: "center"}}>
-          <div>
-            <p className="event-title">
-                Events
-            </p>
-            {events && 
+      </section>
+        {/* Events section — KEEP YOUR EXISTING EVENT CARDS HERE */}
+      <section className="lynwood__events" aria-labelledby="lynwood-events-title">
+        
+
+        {/* ───────────── DO NOT CHANGE THE EVENT CARDS ─────────────
+            Put your existing event list/component exactly here.
+            Example: <EventsList location="lynwood" /> or your current map() of cards.
+        */}
+        <div className="lynwood__eventsList">
+          {/*
+            ⬇️ Keep your existing event cards code here. For example:
+            {events.map(e => <EventCard key={e.id} {...e} />)}
+          */}
+          {events && 
             <div className="event-list-container">
                 {events.map((event, index) => {
                   const dateObject = new Date(event?.date);
@@ -71,21 +81,22 @@ function Lynwood() {
                     return (
                       <div class="event-card" key={index}>
                           <div>
-                              <p>{event?.name}</p>
-                              <p>Lynwood</p>
-                              <p>{formattedDate}</p>
+                              <h2>{event?.name}</h2>
+                              <h3>Lynwood</h3>
+                              <h4>{formattedDate}</h4>
                               <p>{event?.description}</p>
                           </div>
                       </div>
                     );
                 })}
             </div>
-            }
-          </div>
+          }
         </div>
-      </div>
+        {/* ───────────── END: YOUR EXISTING EVENT CARDS ───────────── */}
+      </section>
+            
       <Footer/>
-    </div>
+    </main>
   );
 }
 export default Lynwood;
