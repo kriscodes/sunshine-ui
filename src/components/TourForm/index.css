@@ -1,35 +1,31 @@
-/* TourForm – mobile-first, full-bleed, iOS-friendly */
+/* TourForm – contained (no full-bleed), mobile-first, iOS-friendly */
 .tourForm, .tourForm * { box-sizing: border-box; }
 
-/* FULL-BLEED WRAPPER to avoid narrow parent constraints */
 .tourForm {
-  --max-w: 860px;
+  /* Keep this section inside the normal page width */
+  --max-w-card: 860px;
+
   --pad-x: clamp(14px, 4vw, 28px);
   --pad-y: clamp(16px, 6vw, 40px);
 
-  --text: #0f172a;       /* slate-900 */
-  --muted: #475569;      /* slate-600 */
-  --border: #e5e7eb;     /* slate-200 */
-  --focus: #2563eb;      /* blue-600 */
+  --text: #0f172a;   /* slate-900 */
+  --muted: #475569;  /* slate-600 */
+  --border: #e5e7eb; /* slate-200 */
+  --focus: #2563eb;  /* blue-600 */
   --bg: #ffffff;
 
-  /* Break out of any narrow wrapper and add safe-area padding */
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
   padding: var(--pad-y) max(var(--pad-x), env(safe-area-inset-left))
            var(--pad-y) max(var(--pad-x), env(safe-area-inset-right));
-
   color: var(--text);
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden; /* avoids 1px horizontal scroll on iOS */
 }
 
-/* Card container that centers the form and caps width */
+/* Card wrapper that centers the form and caps width */
 .tourForm__card,
 .tourForm .tf__card,          /* fallback for existing markup */
 .tourForm .formCard {
-  width: min(100%, var(--max-w));
+  width: min(100%, var(--max-w-card));
   margin: 0 auto;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -38,7 +34,7 @@
   padding: clamp(16px, 3.2vw, 28px);
 }
 
-/* Progress bar at the top (kept from your earlier design) */
+/* Progress bar kept at the top */
 .tourForm__progress,
 .tourForm .tf__progress {
   width: 100%;
@@ -51,13 +47,13 @@
 .tourForm__progressFill,
 .tourForm .tf__progressFill {
   height: 100%;
-  width: 0%; /* set by inline style in your component */
+  width: 0%; /* set inline from JSX */
   background: linear-gradient(90deg, #60a5fa, #2563eb);
   border-radius: 999px;
   transition: width 220ms ease;
 }
 
-/* Section / step heading */
+/* Headings */
 .tourForm__title,
 .tourForm .tf__title {
   margin: 0 0 8px;
@@ -67,15 +63,16 @@
   color: var(--text);
 }
 
-/* Fields stack with good spacing */
+/* Field layout */
 .tourForm__fields,
 .tourForm .tf__fields,
 .tourForm form {
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
-/* Two-up rows only when there is room */
+/* 2-up rows only when there is room */
 .tourForm__row--2,
 .tourForm .tf__row--2 {
   display: grid;
@@ -84,7 +81,9 @@
 }
 @media (min-width: 700px) {
   .tourForm__row--2,
-  .tourForm .tf__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tourForm .tf__row--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* Labels */
@@ -97,7 +96,7 @@
   margin: 2px 0 6px;
 }
 
-/* Inputs/selects/textarea – unified look, iOS-friendly tap targets */
+/* Inputs/selects/textarea – consistent, iOS-friendly tap targets */
 .tourForm input[type="text"],
 .tourForm input[type="email"],
 .tourForm input[type="tel"],
@@ -108,21 +107,19 @@
 .tourForm .tf__select,
 .tourForm .tf__textarea {
   width: 100%;
-  min-height: 48px;         /* usable tap size */
+  min-height: 48px;           /* better tap size */
   padding: 12px 14px;
-  font-size: 16px;          /* prevent iOS zoom on focus */
+  font-size: 16px;            /* prevents iOS zoom */
   line-height: 1.4;
-
   color: var(--text);
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 10px;
-
   outline: none;
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
-/* Focus ring */
+/* Focus state */
 .tourForm input:focus,
 .tourForm select:focus,
 .tourForm textarea:focus,
@@ -140,12 +137,12 @@
   resize: vertical;
 }
 
-/* Select: add padding for the arrow; keep arrow away from the edge */
+/* Select: keep the arrow away from the right edge */
 .tourForm select,
 .tourForm .tf__select {
   -webkit-appearance: none;
   appearance: none;
-  padding-right: 38px;       /* room for arrow */
+  padding-right: 38px;
   background-image:
     linear-gradient(transparent, transparent),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -154,15 +151,11 @@
   background-size: 16px, 100% 100%;
 }
 
-/* Helper / error text (if your component shows it) */
+/* Helper / error */
 .tourForm .tf__help { color: var(--muted); font-size: 13px; margin-top: 6px; }
-.tourForm .tf__error {
-  color: #b91c1c; /* red-700 */
-  font-size: 13px;
-  margin-top: 6px;
-}
+.tourForm .tf__error { color: #b91c1c; font-size: 13px; margin-top: 6px; }
 
-/* Actions: buttons stack on mobile, sit side-by-side on larger screens */
+/* Actions: stack on mobile, side-by-side on wider screens */
 .tourForm__actions,
 .tourForm .tf__actions {
   display: grid;
@@ -172,7 +165,9 @@
 }
 @media (min-width: 560px) {
   .tourForm__actions,
-  .tourForm .tf__actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tourForm .tf__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* Buttons */
@@ -192,7 +187,7 @@
   cursor: pointer;
 
   color: #fff;
-  background: #2563eb;            /* primary */
+  background: #2563eb;
   box-shadow: 0 8px 18px rgba(37, 99, 235, .18);
   transition: background-color 140ms ease, transform 80ms ease, box-shadow 140ms ease;
 }
@@ -201,7 +196,7 @@
 .tourForm button:active,
 .tourForm .tf__btn:active { transform: translateY(1px); }
 
-/* Secondary/ghost button style (if you have a Back button) */
+/* Ghost button (e.g., Back) */
 .tourForm .tf__btn--ghost {
   background: #fff;
   color: #374151;
@@ -210,13 +205,13 @@
 }
 .tourForm .tf__btn--ghost:hover { background: #f9fafb; }
 
-/* Keep any sliding track from peeking outside */
+/* Keep sliders/tracks contained if you use slide-in steps */
 .tourForm__viewport,
 .tourForm .tf__viewport { overflow: hidden; width: 100%; }
 .tourForm__track,
 .tourForm .tf__track { min-width: 100%; }
 
-/* Reduce motion preferences */
+/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .tourForm__progressFill { transition: none; }
   .tourForm input, .tourForm select, .tourForm textarea { transition: none; }
