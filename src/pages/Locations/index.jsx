@@ -1,11 +1,10 @@
 import React from 'react';
-import Header from '../../components/Header';
-import ImageSlider from '../../components/ImageSlider'
-import EventList from '../../components/EventList';
-import Footer from '../../components/Footer';
-import "./styles.css"
 import { Link } from 'react-router-dom';
+import Header from '../../components/Header';
+import ImageSlider from '../../components/ImageSlider';
 import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
+import Footer from '../../components/Footer';
+import './index.css';
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -25,52 +24,73 @@ const images = [
   '/compton/image9.jpg'
 ];
 
-const LocationCard = (props) => {
-  const {name, description} = props;
-  return (
-    
-      <div className="location-card">
-        <Link to={props.name === "Compton" ? "/compton" : "/lynwood"} className="link">
-          <p className="location-name">
-            {name}
-          </p>
-          <img src={props.name === "Compton" ? "/sunshinecom.jpg" : "/sunshinelyn.jpg"} alt="" width="400" />
-        </Link>
-      </div>
-  );
-}
 
-function Locations() {
+/**
+ * Locations – simple 2‑card grid, mobile‑first.
+ *
+ * Notes:
+ * - Update image paths to match your repo. If your photos live in /public, use root-relative paths:
+ *     /images/locations/lynwood.jpg
+ *     /images/locations/compton.jpg
+ * - The entire card is clickable (accessible Link).
+ * - Alt text included for accessibility.
+ */
+export default function Locations() {
+  const tiles = [
+    {
+      to: '/lynwood',
+      title: 'Sunshine Preschool – Lynwood',
+      img: '/sunshinelyn.jpg', // <-- update if your file is elsewhere
+      alt: 'Children playing at the Lynwood campus',
+    },
+    {
+      to: '/compton',
+      title: 'Sunshine Preschool – Compton',
+      img: '/sunshinecom.jpg', // <-- update if your file is elsewhere
+      alt: 'Classroom activities at the Compton campus',
+    },
+  ];
 
   return (
-    <div>
-        <Header/>
-        <ImageSlider
-            images={images}
-            videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
-            interval={7000}
-            fadeDuration={600}
-            holdBlack={220}
-            height="clamp(420px, 68vh, 900px)"
-            contentAlign="left"
-            minHeight="70vh"
-            debug
-            startAtIndex={999}
-          >
-  
-        </ImageSlider>
-        <div style={{ margin: '64px 0' }}>
-          <div style={{ display: 'flex', justifyContent: "center" }}>
-            <LocationCard name="Compton"/>
-            <LocationCard name="Lynwood"/>
-          </div>
-          
-        </div>
-        
-        
-        <Footer/>
+    <div className="locations">
+      <Header/>
+              <ImageSlider
+                images={images}
+                videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
+                interval={7000}
+                fadeDuration={600}
+                holdBlack={220}
+                height="clamp(420px, 68vh, 900px)"
+                contentAlign="left"
+                minHeight="70vh"
+                debug
+                startAtIndex={999}
+              >
+      
+            </ImageSlider>
+      <header className="locations__header">
+        <h1 className="locations__title">Our Locations</h1>
+        <p className="locations__subtitle">Choose a campus to learn more.</p>
+      </header>
+
+      <section className="locations__grid" aria-label="Campus links">
+        {tiles.map((t) => (
+          <Link key={t.to} to={t.to} className="locCard" aria-label={t.title}>
+            <figure className="locCard__media">
+              <img
+                className="locCard__image"
+                src={t.img}
+                alt={t.alt}
+                loading="lazy"
+                decoding="async"
+                onError={(e) => { e.currentTarget.style.opacity = 0.0; }}
+              />
+              <figcaption className="locCard__label">{t.title}</figcaption>
+            </figure>
+          </Link>
+        ))}
+      </section>
+      <Footer/>
     </div>
   );
 }
-
-export default Locations;
