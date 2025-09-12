@@ -7,6 +7,7 @@ import TourForm from '../../components/TourForm';
 import Footer from '../../components/Footer';
 import YouTubeEmbed from '../../components/YouTubeEmbed'
 import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
+import sunshineVideoC from '../../assets/sunshine-web-2.mp4' ; // bundle-managed URL
 import FormsQuickLinks from '../../components/FormsQuickLinks';
 import formEN from '../../assets/enrollment_english.pdf';
 import formES from '../../assets/enrollment_spanish.pdf';
@@ -40,6 +41,7 @@ function Home() {
         <ImageSlider
           images={images}
           videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
+          videoSrc2={sunshineVideoC}
           interval={7000}
           fadeDuration={600}
           holdBlack={220}

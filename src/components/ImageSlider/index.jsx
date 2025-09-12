@@ -1,27 +1,32 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
- * ImageSlider – image rotator with optional last-slide video (no-flash blackout switch).
+ * ImageSlider – images + multiple videos (videos play in given order).
  *
  * Props:
  *  - images: (string | { src: string, alt?: string })[]
- *  - videoSrc?: string                // optional; appended as LAST slide
- *  - intervalMs?: number              // per-image dwell time; default 6000
- *  - fadeMs?: number                  // blackout fade duration; default 450
- *  - minHeight?: string|number        // fallback height; default '60vh'
+ *  - videos?: string[]                 // NEW: one or more video URLs (order preserved)
+ *  - videoSrc?: string                 // legacy single video (appended last)
+ *  - videoSrc2?: string                // optional convenience second video (also appended)
+ *  - intervalMs?: number               // per-image dwell time; default 6000
+ *  - fadeMs?: number                   // blackout fade duration; default 450
+ *  - minHeight?: string|number         // fallback height; default '60vh'
  *  - className?: string
- *  - debug?: boolean                  // logs to console
+ *  - debug?: boolean
  */
 export default function ImageSlider({
   images = [],
+  videos = [],
   videoSrc,
+  videoSrc2,
   intervalMs = 6000,
   fadeMs = 450,
   minHeight = '60vh',
   className = '',
   debug = false,
 }) {
-  // Normalize images (ignore accidental .mp4 entries)
+  /* -------------------- Normalize inputs -------------------- */
+  // Images (ignore accidental .mp4 entries)
   const imageSlides = useMemo(() => {
     const out = [];
     for (const item of images) {
@@ -39,59 +44,73 @@ export default function ImageSlider({
     return out;
   }, [images]);
 
-  // Prefetch a blob version of the video (avoids dev Range issues)
-  const [videoBlobUrl, setVideoBlobUrl] = useState(null);
-  useEffect(() => {
-    let objectUrl;
-    let aborted = false;
-    async function prefetchBlob() {
-      if (!videoSrc) return;
-      try {
-        const resp = await fetch(videoSrc);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const blob = await resp.blob();
-        if (aborted) return;
-        objectUrl = URL.createObjectURL(blob);
-        setVideoBlobUrl(objectUrl);
-        if (debug) console.log('[ImageSlider] video blob ready:', objectUrl);
-      } catch (e) {
-        if (debug) console.warn('[ImageSlider] video blob fetch failed; using direct URL', e);
-      }
-    }
-    prefetchBlob();
-    return () => {
-      aborted = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [videoSrc, debug]);
+  // Videos: allow videos[], videoSrc, videoSrc2 (dedup, keep order)
+  const videoList = useMemo(() => {
+    const arr = [];
+    if (Array.isArray(videos)) arr.push(...videos);
+    if (videoSrc) arr.push(videoSrc);
+    if (videoSrc2) arr.push(videoSrc2);
+    return Array.from(new Set(arr.filter(Boolean).map(String))); // unique, no empties
+  }, [videos, videoSrc, videoSrc2]);
 
-  // Build slides: images + (optional) video LAST (prefer blob URL when available)
+  /* -------------------- Prefetch videos to blobs -------------------- */
+  const [videoBlobMap, setVideoBlobMap] = useState({});
+  useEffect(() => {
+    let cancelled = false;
+    const createdUrls = [];
+
+    (async () => {
+      const updates = {};
+      for (const src of videoList) {
+        if (!src || videoBlobMap[src]) continue;
+        try {
+          const resp = await fetch(src);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const blob = await resp.blob();
+          const url = URL.createObjectURL(blob);
+          createdUrls.push(url);
+          updates[src] = url;
+          if (debug) console.log('[ImageSlider] video blob ready:', src);
+        } catch (e) {
+          if (debug) console.warn('[ImageSlider] blob fetch failed:', src, e);
+        }
+      }
+      if (!cancelled && Object.keys(updates).length) {
+        setVideoBlobMap(prev => ({ ...prev, ...updates }));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      createdUrls.forEach(u => URL.revokeObjectURL(u));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoList, debug]); // (intentionally not depending on videoBlobMap)
+
+  /* -------------------- Build final slides -------------------- */
   const slides = useMemo(() => {
     const arr = [...imageSlides];
-    if (videoSrc) arr.push({ type: 'video', src: videoBlobUrl || videoSrc });
+    for (const src of videoList) {
+      arr.push({ type: 'video', src: videoBlobMap[src] || src });
+    }
     return arr;
-  }, [imageSlides, videoSrc, videoBlobUrl]);
+  }, [imageSlides, videoList, videoBlobMap]);
 
   const hasSlides = slides.length > 0;
-  const hasVideo = !!videoSrc;
-  const videoIndex = hasVideo ? slides.length - 1 : -1;
+  const poster = imageSlides[0]?.src || '';
 
-  // Index / animation
+  /* -------------------- Index + transitions -------------------- */
   const [index, setIndex] = useState(0);
-  const [isBlackout, setIsBlackout] = useState(false);     // black overlay state
-  const [isTransitioning, setIsTransitioning] = useState(false); // block timers during swap
+  const [isBlackout, setIsBlackout] = useState(false);          // black screen overlay anim
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef(null);
   const swapOutRef = useRef(null);
   const swapInRef = useRef(null);
+  const videoRefs = useRef({});                                  // index -> <video>
 
-  const videoEl = useRef(null);
-
-  // Clamp index if slides length changes
+  // Clamp if slides change
   useEffect(() => {
-    if (!hasSlides) {
-      if (index !== 0) setIndex(0);
-      return;
-    }
+    if (!hasSlides) { if (index !== 0) setIndex(0); return; }
     const max = slides.length - 1;
     if (index > max) setIndex(max);
     if (index < 0) setIndex(0);
@@ -113,27 +132,19 @@ export default function ImageSlider({
     }
   }, []);
 
-  // ***** Blackout switch (prevents flash) *****
-  const blackoutSwitch = useCallback(
-    (toIndex) => {
-      if (isTransitioning || !slides.length) return;
-      setIsTransitioning(true);
-      // Phase 1: fade to black
-      setIsBlackout(true);
-      swapOutRef.current = setTimeout(() => {
-        // Phase 2: swap instantly under blackout (no slide opacity transitions)
-        setIndex(toIndex);
-        // Phase 3: after a paint, fade back from black
-        requestAnimationFrame(() => {
-          setIsBlackout(false);
-          swapInRef.current = setTimeout(() => {
-            setIsTransitioning(false);
-          }, fadeMs);
-        });
-      }, fadeMs);
-    },
-    [isTransitioning, slides.length, fadeMs]
-  );
+  // Blackout swap: fade to black → swap instantly → fade in
+  const blackoutSwitch = useCallback((toIndex) => {
+    if (isTransitioning || !slides.length) return;
+    setIsTransitioning(true);
+    setIsBlackout(true);
+    swapOutRef.current = setTimeout(() => {
+      setIndex(toIndex);
+      requestAnimationFrame(() => {
+        setIsBlackout(false);
+        swapInRef.current = setTimeout(() => setIsTransitioning(false), fadeMs);
+      });
+    }, fadeMs);
+  }, [slides.length, isTransitioning, fadeMs]);
 
   const goToNext = useCallback(() => {
     if (!slides.length) return;
@@ -141,11 +152,9 @@ export default function ImageSlider({
     blackoutSwitch(next);
   }, [index, slides.length, blackoutSwitch]);
 
-  const goToFirst = useCallback(() => {
-    blackoutSwitch(0);
-  }, [blackoutSwitch]);
+  const goToFirst = useCallback(() => blackoutSwitch(0), [blackoutSwitch]);
 
-  // Auto-advance images (no timers during transition or on video)
+  // Auto-advance images only
   useEffect(() => {
     clearTimer();
     if (!hasSlides || isTransitioning) return;
@@ -155,38 +164,53 @@ export default function ImageSlider({
     return clearTimer;
   }, [index, slides, hasSlides, intervalMs, goToNext, clearTimer, isTransitioning]);
 
-  // Activate video when we land on the last slide
+  /* -------------------- Activate video when visible -------------------- */
   useEffect(() => {
-    if (!hasVideo || index !== videoIndex) return;
-    const v = videoEl.current;
+    const current = slides[index];
+    if (!current || current.type !== 'video') return;
+    const v = videoRefs.current[index];
     if (!v) return;
-    const srcToUse = slides[videoIndex]?.src;
-    if (!srcToUse) return;
 
-    if (debug) console.log('[ImageSlider] activating video:', srcToUse);
+    // Pause any other video that might be playing
+    Object.keys(videoRefs.current).forEach(k => {
+      const i = Number(k);
+      if (i !== index) {
+        const other = videoRefs.current[i];
+        try { other && other.pause && other.pause(); } catch {}
+      }
+    });
 
-    v.src = srcToUse;    // blob if available, else direct URL
-    v.muted = true;      // required for autoplay
+    v.muted = true;                 // required for autoplay on iOS
     v.playsInline = true;
     v.autoplay = true;
+    v.preload = 'auto';
+    if (poster) v.poster = poster;
+    v.src = current.src;
+
     try { v.load(); } catch {}
     const p = v.play();
-    if (p && typeof p.catch === 'function') p.catch(() => { /* autoplay may be blocked */ });
+    if (p && typeof p.catch === 'function') p.catch(() => {
+      if (debug) console.warn('[ImageSlider] autoplay blocked; user gesture may be required');
+    });
 
-    const onError = () => {
-      if (debug) console.warn('[ImageSlider] video element error -> goToFirst');
-      // If it fails, just go back gracefully
-      goToFirst();
+    const onEnded = () => {
+      // After ANY video ends, advance to the next slide (wraps to first image at end)
+      goToNext();
     };
+    const onError = () => {
+      if (debug) console.warn('[ImageSlider] video error -> skipping slide');
+      goToNext();
+    };
+
+    v.addEventListener('ended', onEnded);
     v.addEventListener('error', onError);
-    return () => v.removeEventListener('error', onError);
-  }, [hasVideo, index, videoIndex, slides, goToFirst, debug]);
+    return () => {
+      v.removeEventListener('ended', onEnded);
+      v.removeEventListener('error', onError);
+    };
+  }, [index, slides, debug, goToNext, poster]);
 
-  const handleVideoEnded = () => {
-    if (debug) console.log('[ImageSlider] video ended -> back to first image');
-    if (imageSlides.length) goToFirst();
-  };
-
+  /* -------------------- Render -------------------- */
   if (!hasSlides) {
     return (
       <div
@@ -205,7 +229,6 @@ export default function ImageSlider({
     >
       {slides.map((s, i) => {
         const active = isActive(i);
-        // IMPORTANT: no per-slide opacity transition -> swap is instant under blackout (no flash)
         const baseStyle = {
           position: 'absolute',
           inset: 0,
@@ -213,25 +236,23 @@ export default function ImageSlider({
           height: '100%',
           objectFit: 'cover',
           opacity: active ? 1 : 0,
-          transition: 'none',
+          transition: 'none',                 // swap happens under blackout (no flash)
           pointerEvents: active ? 'auto' : 'none',
           backgroundColor: '#000',
         };
 
         if (s.type === 'video') {
-          const poster = imageSlides[0]?.src || '';
           return (
             <video
               key={`slide-video-${i}`}
-              ref={videoEl}
+              ref={(el) => { if (el) videoRefs.current[i] = el; }}
               className="image-slider__media image-slider__media--video"
               style={baseStyle}
-              poster={poster}
               muted
               playsInline
               preload="auto"
-              onEnded={handleVideoEnded}
-              // src is set in the activation effect
+              // src is set when activated
+              poster={poster}
             />
           );
         }
@@ -253,7 +274,7 @@ export default function ImageSlider({
         );
       })}
 
-      {/* Blackout overlay controls the visual fade (in/out) */}
+      {/* Blackout overlay controls all fades */}
       <div
         aria-hidden
         style={{
