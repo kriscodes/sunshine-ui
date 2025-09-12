@@ -49,7 +49,7 @@ function Home() {
           contentAlign="left"
           minHeight="70vh"
           debug
-          startAtIndex={999}
+          startAtIndex={0}
         >
 
       </ImageSlider>
