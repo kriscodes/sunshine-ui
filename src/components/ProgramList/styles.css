@@ -1,98 +1,24 @@
-/* ---- Tunables ---- */
-.program-list {
-  --card-gap: 16px;                 /* space between cards */
-  --image-ratio: 4 / 3;             /* 4:3 keeps it compact; try 3/2 or 16/9 if you prefer */
-  --card-radius: 12px;
-  --card-padding: 14px;
+.programs, .programs * { box-sizing: border-box; }
 
-  /* We cap the container so two 300px cards + the gap fit nicely.
-     On smaller screens, the container shrinks, but layout stays 2 columns. */
-  --card-ideal: 300px;
+.programs {
+  --max-w: 1200px;
+  --pad-x: clamp(16px, 4vw, 28px);
+  --pad-y: clamp(18px, 5vw, 36px);
+  padding: var(--pad-y) var(--pad-x);
 }
 
-/* Basic section padding (optional) */
-.programs-section {
-  padding: clamp(8px, 4vw, 24px);
-}
-
-/* ---- Centered 2x2 Grid ---- */
-
-/* Center the *container* and keep it at most 2*300px + gap, but allow it to shrink on small screens. */
-.program-list {
-  width: min(100%, calc(2 * var(--card-ideal) + var(--card-gap)));
-  margin-inline: auto;               /* center container */
+.programs__grid {
+  margin: 0 auto;
+  max-width: var(--max-w);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);  /* always 2 columns */
-  gap: var(--card-gap);
-  list-style: none;                  /* no bullets */
-  padding: 0;
-  margin-block: 0;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  justify-items: stretch;
 }
 
-/* ---- Card ---- */
-.program-card {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid #e5e7eb;         /* light gray */
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.06);
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-
-.program-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-}
-
-/* Placeholder to keep the 2x2 grid shape when fewer than 4 items exist */
-.program-card--ghost {
-  visibility: hidden;                /* keeps space without showing content */
-}
-
-/* ---- Image: uniform size via aspect-ratio + object-fit ---- */
-.program-card__media {
-  position: relative;
-  width: 100%;
-  aspect-ratio: var(--image-ratio);  /* enforces same visual box for all images */
-  overflow: hidden;
-  background: #f6f7f9;
-}
-
-.program-card__media > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;                 /* fill box, crop overflow */
-  object-position: var(--object-position, center);
-  /* neutralize any old global rules */
-  max-width: none;
-  max-height: none;
-}
-
-/* ---- Text ---- */
-.program-card__body {
-  padding: var(--card-padding);
-}
-
-.program-card__title {
-  margin: 0 0 6px;
-  font-size: 18px;
-  line-height: 1.25;
-  font-weight: 600;
-  color: #111827;
-}
-
-.program-card__desc {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #4b5563;
-  display: -webkit-box;              
-  -webkit-line-clamp: 18;             
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+/* 2 columns on tablet/desktop; stays readable on phones */
+@media (min-width: 720px) {
+  .programs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
