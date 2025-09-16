@@ -14,13 +14,13 @@ const EventList = (props) => {
             const c = res.data;
             if(props.location == 'Lynwood' || props.location == 'lynwood') {
                 const filteredLynwoodData = c.filter((item) => {
-                    return item.location.includes('lynwood')
+                    return item.location.includes('Lynwood')
                 })
                 setEvents(filteredLynwoodData);
             }
             else if(props.location == 'Compton' || props.location == 'compton') {
                 const filteredComptonData = c.filter((item) => {
-                    return item.location.includes('compton')
+                    return item.location.includes('Compton')
                 })
                 setEvents(filteredComptonData);
             }
