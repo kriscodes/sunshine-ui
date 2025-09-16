@@ -12,20 +12,15 @@ const EventList = (props) => {
             await axios.get('https://sunshine-api.onrender.com/events')
           .then(res => {
             const c = res.data;
-            console.log(res.data);
-            console.log(props.location);
-            if(props.location === 'Lynwood') {
-                console.log('inside props.location if statement');
+            if(props.location == 'Lynwood' || props.location == 'lynwood') {
                 const filteredLynwoodData = c.filter((item) => {
-                    console.log('inside filter for lynwood')
                     return item.location.includes('lynwood')
                 })
-                console.log(filteredLynwoodData);
                 setEvents(filteredLynwoodData);
             }
-            else if(props.location === 'Compton') {
+            else if(props.location == 'Compton' || props.location == 'lynwood') {
                 const filteredComptonData = c.filter((item) => {
-                    return item.location.includes('Compton')
+                    return item.location.includes('compton')
                 })
                 setEvents(filteredComptonData);
             }
@@ -49,7 +44,6 @@ const EventList = (props) => {
             {events && 
             <div className="event-list-container">
                 {events.map((event, index) => {
-                    console.log(event)
                     return (
                         <div className="event-container" key={index}>
                             <div>
@@ -62,9 +56,7 @@ const EventList = (props) => {
                     );
                 })}
             </div>
-            
             }
-            
         </div>
     )
 }
