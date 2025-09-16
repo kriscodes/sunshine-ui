@@ -24,7 +24,7 @@ function Lynwood() {
       .then(res => {
         const c = res.data;
         const filteredData = c.filter((item) => {
-          return item.location.includes('compton')
+          return item.location.includes('Compton')
         })
         setEvents(filteredData);
       })
