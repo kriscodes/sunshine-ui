@@ -18,7 +18,7 @@ const EventList = (props) => {
                 })
                 setEvents(filteredLynwoodData);
             }
-            else if(props.location == 'Compton' || props.location == 'lynwood') {
+            else if(props.location == 'Compton' || props.location == 'compton') {
                 const filteredComptonData = c.filter((item) => {
                     return item.location.includes('compton')
                 })
