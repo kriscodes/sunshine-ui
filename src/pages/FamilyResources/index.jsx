@@ -67,9 +67,6 @@ function FamilyResources() {
           <h2>Calendar</h2>
           <p>We will scan and post the latest calendar each month.</p>
           <p><a href="/docs/October 2025 calendar.pdf" target="_blank">Download latest calendar</a></p>
-          <p style={{ opacity: 0.8, fontSize: 14 }}>
-            Tip: You can also version files (e.g., <code>/docs/calendar-YYYY-MM.pdf</code>).
-          </p>
         </section>
 
         <section id="lunch-menu" style={{ marginTop: 32 }}>
