@@ -6,8 +6,8 @@ import { TextTestimonial, VideoTestimonial } from '../../components/Testimonials
 import TourForm from '../../components/TourForm';
 import Footer from '../../components/Footer';
 import YouTubeEmbed from '../../components/YouTubeEmbed'
-import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
-import sunshineVideoC from '../../assets/sunshine-web-2.mp4' ; // bundle-managed URL
+import sunshineVideo from '../../assets/sunshine-web.mp4'; 
+import sunshineVideoC from '../../assets/sunshine-web-2.mp4' ; 
 import FormsQuickLinks from '../../components/FormsQuickLinks';
 import formEN from '../../assets/enrollment_english.pdf';
 import formES from '../../assets/enrollment_spanish.pdf';
@@ -40,7 +40,7 @@ function Home() {
         <Header/>
         <ImageSlider
           images={images}
-          videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
+          videoSrc={sunshineVideo}  
           videoSrc2={sunshineVideoC}
           interval={7000}
           fadeDuration={600}
@@ -64,9 +64,6 @@ function Home() {
             <YouTubeEmbed
               url="https://youtube.com/shorts/ypzhv0q1byI"
               title="A day at Sunshine"
-              // Optional overrides:
-              // aspect="16 / 9"           // force 16:9 instead of auto
-              // maxWidth="min(100%, 720px)" // adjust width if desired
             />
             <TourForm/>
             <Footer/>

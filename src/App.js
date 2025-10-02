@@ -11,6 +11,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsofUse from './pages/TermsofUse';
 import Compton from './pages/Compton';
 import Lynwood from './pages/Lynwood';
+import About from './pages/About';
+import FamilyResources from './pages/FamilyResources';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home/>} />
         <Route path="/locations" element={<Locations/>} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/resources" element={<FamilyResources/>} />
         <Route path="/programs" element={<Programs/>} />
         <Route path="/program" element={<Program/>} />
         <Route path="/events" element={<Events/>} />

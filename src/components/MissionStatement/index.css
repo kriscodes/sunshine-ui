@@ -1,7 +1,5 @@
-/* Mobile-first, full-bleed, iOS-safe MissionStatement */
 .mission, .mission * { box-sizing: border-box; }
 
-/* FULL-BLEED: escape any narrow parent wrapper */
 .mission {
   --max-w: 1200px;
   --pad-x: clamp(16px, 4vw, 28px);
@@ -19,18 +17,15 @@
   color: var(--text);
   -webkit-text-size-adjust: 100%;
 
-  /* full-bleed breakout */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
 
-  /* safe-area padding */
   padding: var(--pad-y) max(var(--pad-x), env(safe-area-inset-left))
            var(--pad-y) max(var(--pad-x), env(safe-area-inset-right));
-  overflow-x: hidden; /* avoid stray 1px scrollbars on iOS */
+  overflow-x: hidden; 
 }
 
-/* subtle warm background */
 .mission__bg {
   position: absolute;
   inset: 0;
@@ -41,7 +36,6 @@
   z-index: -1;
 }
 
-/* INNER WRAP: center + max width */
 .mission__inner {
   background: var(--surface);
   border: 1px solid rgba(15,23,42,.08);
@@ -53,10 +47,9 @@
 
   display: grid;
   gap: clamp(12px, 3vw, 24px);
-  min-width: 0; /* prevent overflow in Safari */
+  min-width: 0; 
 }
 
-/* Split layout only when there is room */
 .mission__inner--split { grid-template-columns: 1fr; }
 @media (min-width: 960px) {
   .mission__inner--split { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
@@ -64,7 +57,6 @@
   .mission__inner--left > * { direction: ltr; }
 }
 
-/* COPY */
 .mission__copy { display: grid; gap: clamp(8px, 2.4vw, 14px); min-width: 0; }
 .mission__title {
   display: flex; align-items: center; gap: 10px;
@@ -82,7 +74,6 @@
   color: var(--text); overflow-wrap: anywhere;
 }
 
-/* optional highlight pills */
 .mission__highlights {
   display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none;
 }
@@ -93,7 +84,6 @@
   border: 1px solid rgba(15,23,42,.08);
 }
 
-/* MEDIA */
 .mission__media { width: 100%; display: grid; min-width: 0; }
 .mission__img {
   width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;

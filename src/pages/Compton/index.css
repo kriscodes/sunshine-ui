@@ -1,11 +1,11 @@
-/* Card shell — mirrors the events card */
+
 .event-card {
   width: 100%;
-  max-width: 300px;                     /* ~ the size we used for event cards */
+  max-width: 300px;                     
   background: #fff;
-  border: 1px solid #e5e7eb;            /* light gray border */
+  border: 1px solid #e5e7eb;            
   border-radius: 12px;
-  overflow: hidden;                      /* rounds the image corners too */
+  overflow: hidden;                      
   box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.06);
   transition: transform .18s ease, box-shadow .18s ease;
   padding: 32px;
@@ -16,19 +16,16 @@
   box-shadow: 0 4px 16px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
 }
 
-/* Uniform image: same visual height for all orientations */
 .event-card > img {
   width: 100%;
-  aspect-ratio: 4 / 3;                   /* pick 3/2 or 16/9 if you prefer */
+  aspect-ratio: 4 / 3;                   
   display: block;
-  object-fit: cover;                     /* crop tall images to match others */
+  object-fit: cover;                     
   object-position: center;
-  /* neutralize any old global rules */
   max-width: none;
   max-height: none;
 }
 
-/* Title + description spacing/typography like events card */
 .event-card > h3 {
   margin: 12px 14px 6px;
   font-size: 18px;
@@ -42,12 +39,11 @@
   font-size: 14px;
   line-height: 1.5;
   color: #4b5563;
-  display: -webkit-box;                  /* keep heights tidy */
-  -webkit-line-clamp: 3;                 /* clamp long text ~3 lines */
+  display: -webkit-box;                  
+  -webkit-line-clamp: 3;                 
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* Scope everything to this page */
 .lynwood, .lynwood * { box-sizing: border-box; }
 
 .lynwood {
@@ -55,18 +51,16 @@
   --pad-x: clamp(16px, 4vw, 28px);
   --pad-y: clamp(18px, 6vw, 36px);
 
-  --text: #0f172a;    /* slate-900 */
-  --muted: #475569;   /* slate-600 */
-  --border: #e5e7eb;  /* slate-200 */
-
-  --accent-1: #ffe7c2;  /* warm, matches header/footer */
+  --text: #0f172a;    
+  --muted: #475569;   
+  --border: #e5e7eb;  
+  --accent-1: #ffe7c2;  
   --accent-2: #ffd1a8;
   --accent-3: #fff7cc;
 
   color: var(--text);
 }
 
-/* ------------------ HERO ------------------ */
 .lynwood__hero {
   position: relative;
   margin: 32px auto 32px;
@@ -99,16 +93,15 @@
   font-size: clamp(14px, 3.8vw, 15px);
 }
 
-/* Info strip */
 .lynwood__info {
   margin-top: 6px;
   display: grid;
   gap: 12px;
-  grid-template-columns: 1fr;       /* mobile: stack */
+  grid-template-columns: 1fr;       
 }
 @media (min-width: 720px) {
   .lynwood__info {
-    grid-template-columns: 1fr 1fr auto; /* address | phone | actions */
+    grid-template-columns: 1fr 1fr auto; 
     align-items: end;
   }
 }
@@ -121,7 +114,7 @@
   font-size: 12px;
   letter-spacing: .3px;
   text-transform: uppercase;
-  color: #334155; /* slate-700 */
+  color: #334155; 
 }
 .lynwood__tel {
   color: #0f172a;
@@ -130,7 +123,6 @@
 }
 .lynwood__tel:hover { text-decoration: underline; }
 
-/* Small actions */
 .lynwood__actions {
   display: grid;
   grid-auto-flow: column;
@@ -167,7 +159,6 @@
 }
 .lynwood__btn--ghost:hover { background: #f9fafb; }
 
-/* ------------------ EVENTS ------------------ */
 .lynwood__events {
   margin: 10px auto 0;
   max-width: var(--max-w);
@@ -179,7 +170,6 @@
   font-size: clamp(18px, 5vw, 22px);
 }
 
-/* This just provides spacing. Your event cards remain 100% untouched. */
 .lynwood__eventsList {
   display: block;
 }

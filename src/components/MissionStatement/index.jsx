@@ -1,36 +1,6 @@
 import React from 'react';
 import './index.css';
 
-/**
- * MissionStatement – responsive, polished section for your mission copy.
- *
- * Props:
- *  - title?: string                (default: "Our Mission")
- *  - text?: string | string[]      (your mission; string or array of paragraphs)
- *  - imageSrc?: string             (optional; shows a photo on larger screens)
- *  - imageAlt?: string             (alt text for the image)
- *  - highlightPills?: string[]     (optional short values like “Play‑based learning”)
- *  - align?: 'left' | 'right'      (image side on desktop; default 'right')
- *
- * Usage (simple):
- *   <MissionStatement
- *     title="Our Mission"
- *     text="We nurture the whole child through play, exploration, and a safe, loving community."
- *   />
- *
- * Usage (with image + multiple paragraphs):
- *   <MissionStatement
- *     title="Our Mission"
- *     text={[
- *       "We nurture the whole child through play, exploration, and a safe, loving community.",
- *       "Our teachers partner with families to foster curiosity, kindness, and school readiness."
- *     ]}
- *     imageSrc="/images/mission-photo.jpg"
- *     imageAlt="Children learning and playing at Sunshine Preschool"
- *     highlightPills={["Safe & Nurturing", "Play‑Based Learning", "Whole‑Child Growth"]}
- *     align="right"
- *   />
- */
 export default function MissionStatement({
   title = 'Our Mission',
   text = "Sunshine is dedicated to meeting the individual needs of children and families, fostering a sense of pride in self and community, as it upholds best practices in the field of Early Care and Education, centered on the whole-child approach to learning. Establishing and maintaining secure connections with the children in our care, teaches them that they are part of a caring community that will continue to watch them grow with love. Sunshine is committed to providing an inclusive, and welcoming environment for all members of our staff, children, families, volunteers, subcontractors, and vendors.",
@@ -45,7 +15,7 @@ export default function MissionStatement({
 
   return (
     <section className="mission" aria-labelledby="mission-title">
-      {/* soft decorative background */}
+      
       <div className="mission__bg" aria-hidden="true" />
       <div className={`mission__inner ${hasImage ? 'mission__inner--split' : ''} ${sideClass}`}>
         <div className="mission__copy">

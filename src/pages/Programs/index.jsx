@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import ImageSlider from '../../components/ImageSlider';
 import ProgramList from '../../components/ProgramList'
 import TourForm from '../../components/TourForm';
-import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
+import sunshineVideo from '../../assets/sunshine-web.mp4'; 
 
 const images = [
   '/lawndale/A7402329.jpg',
@@ -30,7 +30,7 @@ function Programs() {
         <Header/>
         <ImageSlider
           images={images}
-          videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
+          videoSrc={sunshineVideo}  
           interval={7000}
           fadeDuration={600}
           holdBlack={220}
@@ -42,10 +42,15 @@ function Programs() {
         >
 
       </ImageSlider>
-
         <div style={{ margin: '64px 0' }}>
-          <div style={{textAlign: 'center'}}>
+          <div style={{ padding: "24px 16px", maxWidth: 960, margin: "0 auto" }}>
             <h1>Classrooms</h1>
+            <p>
+              Here at Sunshine we use a play based approach to learning, our students are under the instruction of qualified teachers 
+              who have really embraced the play based model. We prioritize structure, routine, and outdoor play. When our students know 
+              what to expect during the day, it creates emotional security and predictability by building their confidence and independence. 
+              Each classroom is designed with their age and developmental stage in mind. Click below for more details by age.
+            </p>
             <div>
               <ProgramList/>
             </div>

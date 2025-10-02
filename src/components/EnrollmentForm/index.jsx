@@ -2,9 +2,6 @@ import React from "react";
 import "./styles.css"
 
 const EnrollmentForm = (props) => {
-
-
-
     return (
         <>
             <div className="enrollment-container">

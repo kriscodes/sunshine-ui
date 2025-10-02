@@ -1,12 +1,12 @@
 import React from 'react';
 import './index.css';
 
-// Public asset paths (served from site root)
+
 const LOGO_SRC = '/sunshine_logo.png';
 const IG_ICON  = '/instagram.png';
 const TT_ICON  = '/tiktok.png';
 
-// Social links
+
 const IG_HREF = 'https://www.instagram.com/sunshine_preschool2';
 const TT_HREF = 'https://www.tiktok.com/@sunshine_preschool1';
 
@@ -18,11 +18,11 @@ export default function Footer({
 }) {
   return (
     <footer className={`siteFooter ${className}`}>
-      {/* Gradient layer */}
+      
       <div className="siteFooter__bg" aria-hidden="true" />
 
       <div className="siteFooter__inner">
-        {/* Row 1: Logo (centered) */}
+        
         <div className="siteFooter__brand">
           <a href="/" aria-label="Sunshine Preschool — Home" className="siteFooter__brandLink">
             <img
@@ -35,7 +35,7 @@ export default function Footer({
           </a>
         </div>
 
-        {/* Row 2: Social icons (centered) */}
+
         <ul className="siteFooter__socialList">
           <li className="siteFooter__socialItem">
             <a
@@ -63,7 +63,7 @@ export default function Footer({
           </li>
         </ul>
 
-        {/* Row 3: Campuses (addresses & phones) */}
+
         <div className="siteFooter__campuses" aria-label="Campuses">
           <div className="siteFooter__campus">
             <span className="footer-title">Sunshine Preschool - Lynwood</span>
@@ -85,7 +85,7 @@ export default function Footer({
         </div>
       </div>
 
-      {/* Row 4: Legal bar */}
+
       <div className="siteFooter__legal">
         <div className="siteFooter__legalInner">
           <div className="siteFooter__legalLinks">

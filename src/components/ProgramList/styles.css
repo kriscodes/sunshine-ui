@@ -16,7 +16,6 @@
   justify-items: stretch;
 }
 
-/* 2 columns on tablet/desktop; stays readable on phones */
 @media (min-width: 720px) {
   .programs__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

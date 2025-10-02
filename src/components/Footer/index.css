@@ -1,7 +1,5 @@
-/* Footer: centered, full-bleed, mobile-first, iOS-safe */
 .siteFooter, .siteFooter * { box-sizing: border-box; }
 
-/* FULL-BLEED wrapper */
 .siteFooter {
   --footer-max-w: 1200px;
   --pad-x: clamp(16px, 4vw, 28px); --pad-y: clamp(18px, 6vw, 36px);
@@ -17,7 +15,6 @@
   overflow-x: hidden;
 }
 
-/* background */
 .siteFooter__bg {
   position: absolute; inset: 0; z-index: 0;
   background:
@@ -25,7 +22,6 @@
     linear-gradient(180deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
 }
 
-/* container */
 .siteFooter__inner {
   position: relative; z-index: 1;
   padding: var(--pad-y) max(var(--pad-x), env(safe-area-inset-left))
@@ -35,14 +31,12 @@
   display: grid; gap: 18px; justify-items: center; text-align: center; min-width: 0;
 }
 
-/* logo */
 .siteFooter__brandLink { text-decoration: none; display: inline-block; }
 .siteFooter__logo {
   height: clamp(42px, 8vw, 72px); width: auto; max-width: 90vw;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));
 }
 
-/* socials: center */
 .siteFooter__socialList {
   list-style: none; padding: 0; margin: 0;
   display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -57,7 +51,6 @@
 .siteFooter__socialLink:hover { background: #fff; transform: translateY(-1px); }
 .siteFooter__socialIcon { width: 22px; height: 22px; object-fit: contain; display: block; }
 
-/* campuses grid */
 .siteFooter__campuses {
   width: 100%;
   display: grid; gap: 14px; grid-template-columns: 1fr; text-align: left; min-width: 0;
@@ -70,13 +63,11 @@
   padding: 14px;
 }
 
-/* preserve your classes */
 .footer-title { font-weight: 800; color: var(--text); font-size: 15px; }
 .footer-address { color: var(--muted); font-style: normal; line-height: 1.5; font-size: 14px; }
 .footer-phone { color: var(--link); text-decoration: none; font-weight: 700; }
 .footer-phone:hover { text-decoration: underline; }
 
-/* legal bar */
 .siteFooter__legal {
   position: relative; z-index: 1;
   padding: 10px max(var(--pad-x), env(safe-area-inset-left))
@@ -104,7 +95,6 @@
   .siteFooter__copy { text-align: right; }
 }
 
-/* reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .siteFooter__socialLink { transition: none; }
   .siteFooter__legalLink { transition: none; }

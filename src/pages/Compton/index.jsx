@@ -15,9 +15,7 @@ const images = [
 ]
 
 function Lynwood() {
-
   const [events, setEvents] = useState();
-
   useEffect( () => {
     async function fetchEvents() {
       await axios.get('https://sunshine-api.onrender.com/events')
@@ -29,9 +27,7 @@ function Lynwood() {
         setEvents(filteredData);
       })
     };
-    
     fetchEvents();
-    
   }, [])
 
   return (
@@ -55,25 +51,14 @@ function Lynwood() {
           <p className="lynwood__subtitle">Upcoming events</p>
         </div>
       </section>
-        {/* Events section — KEEP YOUR EXISTING EVENT CARDS HERE */}
       <section className="lynwood__events" aria-labelledby="lynwood-events-title">
-        
-
-        {/* ───────────── DO NOT CHANGE THE EVENT CARDS ─────────────
-            Put your existing event list/component exactly here.
-            Example: <EventsList location="lynwood" /> or your current map() of cards.
-        */}
         <div className="lynwood__eventsList">
-          {/*
-            ⬇️ Keep your existing event cards code here. For example:
-            {events.map(e => <EventCard key={e.id} {...e} />)}
-          */}
           {events && 
             <div className="event-list-container">
                 {events.map((event, index) => {
                   const dateObject = new Date(event?.date);
 
-                  const month = dateObject.getMonth() + 1; // getMonth() is 0-indexed
+                  const month = dateObject.getMonth() + 1; 
                   const day = dateObject.getDate();
                   const year = dateObject.getFullYear();
 
@@ -92,9 +77,7 @@ function Lynwood() {
             </div>
           }
         </div>
-        {/* ───────────── END: YOUR EXISTING EVENT CARDS ───────────── */}
       </section>
-            
       <Footer/>
     </main>
   );

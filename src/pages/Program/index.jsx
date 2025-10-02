@@ -29,6 +29,4 @@ const Program = (props) => {
     </>
   );
 }
-
-// add time to events, and locations
 export default Program;

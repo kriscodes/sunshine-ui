@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import ImageSlider from '../../components/ImageSlider';
-import sunshineVideo from '../../assets/sunshine-web.mp4'; // bundle-managed URL
+import sunshineVideo from '../../assets/sunshine-web.mp4'; 
 import Footer from '../../components/Footer';
 import './index.css';
 
@@ -24,29 +24,18 @@ const images = [
   '/compton/image9.jpg'
 ];
 
-
-/**
- * Locations – simple 2‑card grid, mobile‑first.
- *
- * Notes:
- * - Update image paths to match your repo. If your photos live in /public, use root-relative paths:
- *     /images/locations/lynwood.jpg
- *     /images/locations/compton.jpg
- * - The entire card is clickable (accessible Link).
- * - Alt text included for accessibility.
- */
 export default function Locations() {
   const tiles = [
     {
       to: '/lynwood',
       title: 'Sunshine Preschool – Lynwood',
-      img: '/sunshinelyn.jpg', // <-- update if your file is elsewhere
+      img: '/sunshinelyn.jpg', 
       alt: 'Children playing at the Lynwood campus',
     },
     {
       to: '/compton',
       title: 'Sunshine Preschool – Compton',
-      img: '/sunshinecom.jpg', // <-- update if your file is elsewhere
+      img: '/sunshinecom.jpg', 
       alt: 'Classroom activities at the Compton campus',
     },
   ];
@@ -56,7 +45,7 @@ export default function Locations() {
       <Header/>
               <ImageSlider
                 images={images}
-                videoSrc={sunshineVideo}  // ✅ pass video separately; plays last, then resets to first image
+                videoSrc={sunshineVideo}  
                 interval={7000}
                 fadeDuration={600}
                 holdBlack={220}

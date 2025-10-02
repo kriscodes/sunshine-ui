@@ -2,13 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import axios from 'axios';
 import './index.css';
 
-/**
- * TourForm – single-step renderer (no horizontal slider; robust to global CSS)
- *
- * Payload:
- *   parent_name, name (back-compat), email, phone, school (from location),
- *   child_name, program, tour_date, tour_time
- */
 export default function TourForm({
   apiBase,
   endpoint = '/tours',
@@ -31,7 +24,6 @@ export default function TourForm({
     'after-school program',
   ];
 
-  // 15-min slots from 08:00 to 17:00 inclusive
   const TIME_OPTIONS = useMemo(() => {
     const opts = [];
     const pad = (n) => String(n).padStart(2, '0');
@@ -52,7 +44,7 @@ export default function TourForm({
   }, []);
 
   const [step, setStep] = useState(0);
-  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [status, setStatus] = useState('idle'); 
   const [errorMsg, setErrorMsg] = useState('');
   const [hintMsg, setHintMsg] = useState('');
 
@@ -60,7 +52,7 @@ export default function TourForm({
     name: '',
     email: '',
     phone: '',
-    location: 'lynwood', // payload key becomes "school"
+    location: 'lynwood', 
     child_name: '',
     program: '',
     preferred_date: '',
@@ -81,7 +73,6 @@ export default function TourForm({
   const totalSteps = steps.length;
   const current = steps[step];
 
-  // Validation
   const PROGRAM_SET = new Set(PROGRAM_OPTIONS);
   const validators = {
     name: (v) => (!!v && v.trim().length >= 2) || 'Please enter the parent name.',
@@ -122,7 +113,6 @@ export default function TourForm({
 
   const canNext = useMemo(() => Object.keys(stepErrors).length === 0, [stepErrors]);
 
-  // Safe autofocus on the first control per step
   const firstFieldRef = useRef(null);
   const canSetSelection = (el) => {
     if (!el || typeof el.setSelectionRange !== 'function') return false;
@@ -141,7 +131,7 @@ export default function TourForm({
           const n = (el.value?.length ?? 0);
           el.setSelectionRange(n, n);
         }
-      } catch { /* ignore */ }
+      } catch {  }
     }
   }, [step]);
 
@@ -168,14 +158,14 @@ export default function TourForm({
       const parentName = form.name.trim();
       const payload = {
         parent_name: parentName,
-        name: parentName,                  // back-compat (remove later if not needed)
+        name: parentName,                  
         email: form.email.trim(),
         phone: form.phone.trim(),
-        school: form.location,             // location -> school
+        school: form.location,             
         child_name: form.child_name.trim(),
         program: form.program,
-        tour_date: form.preferred_date || null, // preferred_date -> tour_date
-        tour_time: form.preferred_time || null, // preferred_time -> tour_time
+        tour_date: form.preferred_date || null, 
+        tour_time: form.preferred_time || null, 
         source: 'sunshine-ui',
       };
 
@@ -199,7 +189,6 @@ export default function TourForm({
     }
   };
 
-  // --- render current step only (no slider/track) ---
   const renderStep = () => {
     switch (current.key) {
       case 'contact':
@@ -425,7 +414,7 @@ export default function TourForm({
         }}
         noValidate
       >
-        {/* Header + PROGRESS BAR AT TOP */}
+        
         <header className="tf-header">
           <div className="tf-title">
             <h2>Book a Tour</h2>
@@ -436,7 +425,6 @@ export default function TourForm({
           </div>
         </header>
 
-        {/* SINGLE STEP ONLY */}
         <div className="tf-stage">
           {renderStep()}
         </div>
@@ -471,7 +459,6 @@ export default function TourForm({
           )}
         </footer>
 
-        {/* Hints & errors */}
         {hintMsg && status !== 'error' && (
           <div className="tf-hint" role="status">{hintMsg}</div>
         )}

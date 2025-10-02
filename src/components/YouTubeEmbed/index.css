@@ -1,19 +1,16 @@
-/* Centers the video on the page with tasteful spacing */
 .ytEmbed {
   display: grid;
   place-items: center;
   padding: clamp(12px, 4vw, 32px);
 }
 
-/* Responsive, centered player shell */
 .ytEmbed__frame {
   width: var(--yt-maxw, min(100%, 960px));
   margin-inline: auto;
 
-  /* Maintain the player’s shape before the iframe loads (no layout shift) */
   aspect-ratio: var(--yt-aspect, 16 / 9);
 
-  background: #000;               /* nice letterbox while loading */
+  background: #000;               
   border-radius: 16px;
   overflow: hidden;
   box-shadow:
@@ -22,7 +19,6 @@
   position: relative;
 }
 
-/* Full-bleed iframe in the shell */
 .ytEmbed__frame > iframe {
   position: absolute;
   inset: 0;

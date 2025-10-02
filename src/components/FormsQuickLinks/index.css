@@ -1,7 +1,5 @@
-/* Enrollment forms: full-bleed container + centered card with two large buttons */
 .formsQ, .formsQ * { box-sizing: border-box; }
 
-/* FULL-BLEED wrapper */
 .formsQ {
   --pad: clamp(14px, 4vw, 24px);
   --primary: #2563eb; --primary-hover: #1d4ed8;
@@ -19,7 +17,6 @@
   overflow-x: hidden;
 }
 
-/* CARD */
 .formsQ-card {
   width: min(100%, 800px);
   margin: 0 auto;
@@ -35,7 +32,6 @@
 .formsQ-title  { margin: 0; font-size: clamp(18px, 5.2vw, 24px); color: var(--text); }
 .formsQ-subtitle { margin: 6px 0 0; color: var(--muted); font-size: clamp(13px, 3.8vw, 14px); }
 
-/* BUTTONS */
 .formsQ-actions {
   display: grid !important;
   grid-template-columns: 1fr;

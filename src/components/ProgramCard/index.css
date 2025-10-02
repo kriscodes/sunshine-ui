@@ -1,16 +1,12 @@
-/* Kids-Collective style ProgramCard — clearly tilted media box */
 .kcCard, .kcCard * { box-sizing: border-box; }
 
 .kcCard {
-  /* Theme tokens (override per theme below) */
-  --bg: #146c43;      /* card background */
-  --fg: #ffffff;      /* header text */
-  --muted: #e7f1eb;   /* subtle subtitle */
-
+  --bg: #146c43;      
+  --fg: #ffffff;      
+  --muted: #e7f1eb;  
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 14px;
-
   background: var(--bg);
   color: var(--fg);
   border-radius: 24px;
@@ -20,18 +16,16 @@
   min-width: 0;
 }
 
-/* Themes */
+
 .kcCard--green { --bg: #146c43; --fg: #fff;     --muted: #d8efe4; }
 .kcCard--sand  { --bg: #b79a7f; --fg: #fff;     --muted: #efe5dc; }
 .kcCard--sage  { --bg: #c8ddcd; --fg: #0f172a;  --muted: #3a4a58; }
 
-/* Header with diagonal bottom edge matching your screenshot */
 .kcCard__head {
   position: relative;
   border-radius: 18px;
   padding: 18px 18px 22px;
   background: var(--bg);
-  /* diagonal (rising to the right) */
   clip-path: polygon(0 0, 100% 0, 100% 72%, 0 86%);
 }
 .kcCard__title {
@@ -49,73 +43,58 @@
 }
 .kcCard--sage .kcCard__subtitle { color: var(--muted); }
 
-/* Media area: big rounded rect the card bg shows around */
 .kcCard__media {
   position: relative;
   border-radius: 18px;
-  /* keep plenty of card color visible around the rotated box */
   padding: 10px 8px 12px;
-  /* sets the height: change to 4/3 if you want shorter */
   aspect-ratio: 4 / 5;
-  background: var(--bg); /* ensures no black ever shows */
-  overflow: visible;     /* allow the rotated child to breathe */
+  background: var(--bg); 
+  overflow: visible;     
 }
-
-/* Rotated inner rectangle (this gives the visible tilt) */
 .kcCard__tilt {
   --tilt: 12deg;
   position: absolute;
   top: 65%;
   left: 57%;
-  /* slightly smaller than the wrapper so card bg runs around it */
   width: 92%;
   height: 92%;
   transform: translate(-50%, -50%) rotate(var(--tilt));
   transform-origin: 50% 50%;
   border-radius: 18px;
   overflow: hidden;
-  /* subtle inner shadow like the reference */
   box-shadow: 0 6px 16px rgba(0,0,0,.14);
-  background: var(--bg); /* fallback color under image */
+  background: var(--bg); 
 }
 
-/* The image itself is NOT rotated; it just fills the rotated box */
+
 .kcCard__img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* force away any earlier transform rules from old styles */
   transform: none !important;
 }
-
-/* Small hover lift on desktop only */
 @media (hover: hover) {
   .kcCard:hover .kcCard__tilt {
     transform: translate(-50%, -50%) rotate(calc(var(--tilt) + 1deg));
   }
 }
-/* 1) Make the card a bit tighter vertically */
 .kcCard {
-  /* reduce space between header and media */
-  gap: 0px; /* was 14px */
+  gap: 0px; 
 }
 
-/* 2) Shorten the media area and overlap it under the header */
 .kcCard__media {
-  /* make the media rectangle shorter -> larger ratio = shorter height */
-  aspect-ratio: 4 / 3;             /* was 4 / 5; try 16 / 9 for even shorter */
-  margin-top: -8px;               /* pull photo up under the diagonal header */
-  padding: 8px 8px 10px;           /* slight padding around the rotated box */
+  aspect-ratio: 4 / 3;             
+  margin-top: -8px;               
+  padding: 8px 8px 10px;           
 }
 
-/* 3) Keep your tilt position, but tighten its size slightly */
 .kcCard__tilt {
-  --tilt: -12deg;                  /* you're using -12 (counter‑clockwise) */
+  --tilt: -12deg;                  
   position: absolute;
-  top: 65%;                        /* keep as you wanted */
-  left: 63%;                       /* keep as you wanted */
-  width: 115%;                      /* was 92%; adjust if you want a bigger photo */
+  top: 65%;                        
+  left: 63%;                       
+  width: 115%;                      
   height: 115%;
   transform: translate(-50%, -50%) rotate(var(--tilt));
   transform-origin: 50% 50%;
@@ -125,8 +104,7 @@
   background: var(--bg);
 }
 
-/* 4) Trim the header a touch so it doesn’t push the photo down too much */
 .kcCard__head {
-  padding: 16px 16px 14px;         /* was 18px 18px 22px */
-  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 84%); /* slightly less tall diagonal */
+  padding: 16px 16px 14px;         
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 84%); 
 }

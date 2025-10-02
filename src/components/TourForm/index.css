@@ -1,17 +1,13 @@
-/* Predictable sizing; prevents overflow surprises */
 .tf, .tf * { box-sizing: border-box; }
 
-/* Spacing token */
 .tf { --tf-pad: clamp(16px, 3vw, 28px); }
 
-/* Root layout */
 .tf {
   display: grid;
   place-items: center;
   padding: clamp(12px, 3vw, 32px);
 }
 
-/* Card shell (explicitly block to avoid global flex rules) */
 .tf-card {
   display: block;
   width: min(100%, 720px);
@@ -23,7 +19,6 @@
   position: relative;
 }
 
-/* Header + PROGRESS BAR AT TOP */
 .tf-header {
   padding: var(--tf-pad) var(--tf-pad) 12px;
   border-bottom: 1px solid #f0f2f5;
@@ -42,7 +37,6 @@
   font-size: 14px;
 }
 
-/* Progress (no dots) */
 .tf-progress {
   position: relative;
   height: 6px;
@@ -58,7 +52,6 @@
   transition: width 300ms ease-in-out;
 }
 
-/* Viewport & Track (force hiding & flex; guard against global overrides) */
 .tf .tf-viewport {
   overflow: hidden !important;
   width: 100%;
@@ -71,24 +64,20 @@
   will-change: transform;
 }
 
-/* Panel sizing – exactly one per viewport */
 .tf .tf-panel {
   flex: 0 0 100% !important;
   width: 100% !important;
   min-width: 100% !important;
 }
 
-/* Panel inner padding (gutters live here, not on viewport) */
 .tf-panelInner { padding: var(--tf-pad); padding-top: 12px; }
 
-/* Titles */
 .tf-panelTitle {
   margin: 0 0 14px;
   font-size: clamp(18px, 2.4vw, 22px);
   color: #111827;
 }
 
-/* Fields – stacked, with ample space */
 .tf-fields {
   display: grid;
   grid-template-columns: 1fr;
@@ -113,7 +102,6 @@
   transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
 }
 
-/* Improved select arrow spacing */
 .tf-field select {
   -webkit-appearance: none;
   appearance: none;
@@ -135,7 +123,6 @@ select::-ms-expand { display: none; }
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
-/* Error states */
 .tf-field.is-error input,
 .tf-field.is-error select,
 .tf-field.is-error textarea {
@@ -144,7 +131,6 @@ select::-ms-expand { display: none; }
 }
 .tf-error { font-size: 12px; color: #b91c1c; }
 
-/* Actions */
 .tf-actions {
   position: relative;
   z-index: 2;
@@ -173,7 +159,6 @@ select::-ms-expand { display: none; }
 .tf-btn--primary { background: #2563eb; color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.24); }
 .tf-btn--primary:hover:not(:disabled) { background: #1d4ed8; }
 
-/* Hint & error banners */
 .tf-hint { margin: 6px var(--tf-pad) var(--tf-pad); color: #6b7280; font-size: 13px; }
 .tf-errorBanner {
   margin: 0 var(--tf-pad) var(--tf-pad);
@@ -184,7 +169,6 @@ select::-ms-expand { display: none; }
   padding: 10px 12px;
 }
 
-/* Success */
 .tf-success { text-align: center; padding: clamp(24px, 6vw, 48px); }
 .tf-successIcon {
   width: 56px; height: 56px; border-radius: 999px;

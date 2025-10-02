@@ -1,20 +1,18 @@
-/* Container: full-bleed hero with responsive height */
 .su-imageSlider {
   position: relative;
-  width: 100vw;                 /* full browser width */
+  width: 100vw;                 
   left: 50%;
   right: 50%;
-  margin-left: -50vw;           /* full-bleed trick if inside centered layouts */
+  margin-left: -50vw;           
   margin-right: -50vw;
 
   height: var(--su-slider-height, clamp(420px, 65vh, 860px));
   overflow: hidden;
   background: #000;
   color: #fff;
-  isolation: isolate;           /* correct stacking for overlays */
+  isolation: isolate;           
 }
 
-/* Slides layer */
 .su-slides {
   position: absolute;
   inset: 0;
@@ -26,7 +24,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;            /* perfect crop on resize */
+  object-fit: cover;            
   object-position: center;
   opacity: 0;
   transition: opacity 900ms ease-in-out;
@@ -37,7 +35,6 @@
 
 .su-slide.is-active { opacity: 1; }
 
-/* Readability shade (left→right) */
 .su-shade {
   position: absolute;
   inset: 0;
@@ -52,7 +49,6 @@
   );
 }
 
-/* Fade-to-black overlay */
 .su-blackout {
   position: absolute;
   inset: 0;
@@ -65,7 +61,6 @@
 
 .su-blackout.is-visible { opacity: 1; }
 
-/* Content overlay (glass panel) */
 .su-contentWrap {
   position: absolute;
   inset: 0;
@@ -89,7 +84,6 @@
   -webkit-backdrop-filter: blur(8px) saturate(120%);
 }
 
-/* Optional typography (adjust to your design system) */
 .su-content h1 {
   margin: 0 0 8px;
   font-size: clamp(28px, 5.2vw, 56px);
@@ -104,7 +98,6 @@
   opacity: 0.95;
 }
 
-/* Navigation arrows */
 .su-nav {
   position: absolute;
   top: 50%;
@@ -127,7 +120,6 @@
 .su-nav--prev { left: 14px; }
 .su-nav--next { right: 14px; }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .su-slide,
   .su-blackout {

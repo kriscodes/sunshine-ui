@@ -1,20 +1,6 @@
 import React from 'react';
 import './index.css';
 
-/**
- * FormsQuickLinks – two-button PDF download block
- *
- * Props:
- *  - englishHref (string)   required
- *  - spanishHref (string)   required
- *  - englishLabel (string)  default: 'Enrollment Form (English)'
- *  - spanishLabel (string)  default: 'Formulario de Inscripción (Español)'
- *  - englishFileName (string) optional
- *  - spanishFileName (string) optional
- *  - heading (string)       default: 'Enrollment Forms'
- *  - subheading (string)    default: 'Download the form in your preferred language.'
- *  - className (string)     optional
- */
 export default function FormsQuickLinks({
   englishHref,
   spanishHref,

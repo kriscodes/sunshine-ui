@@ -13,7 +13,7 @@ export default function ProgramList() {
           <ProgramCard
             key={p.id || p.name || i}
             title={p.name}
-            subtitle={p.subtitle /* e.g., "Ages 3–5" */ }
+            subtitle={p.subtitle}
             description={p.description}
             imgSrc={p.image}
             imgAlt={p.name}
